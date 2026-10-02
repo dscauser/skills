@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Drafts and scratch output from running skills
+*.tmp
+scratch/
