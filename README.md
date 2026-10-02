@@ -8,6 +8,7 @@ Agent skills by Danny Causer, free to use. Each skill is a folder with a
 | Skill | What it does |
 |---|---|
 | [`delegate`](skills/delegate/SKILL.md) | Keeps Claude Opus as the orchestrator and final judge, and hands token-heavy research, coding and testing to Sonnet subagents at medium or high effort. Ships with the two subagent definitions it uses (`agents/sonnet-medium.md`, `agents/sonnet-high.md`). |
+| [`manage-skills`](skills/manage-skills/SKILL.md) | Teaches an agent this repo's layout: create skills in the right repo (public or private, with a privacy check before anything goes public), add third-party skills without committing them, move skills between repos, sync, set up a new machine, and diagnose skills that don't show up. |
 
 ## Use a single skill
 
