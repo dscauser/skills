@@ -38,6 +38,7 @@ mkdir -p "$agents_skills" "$claude_skills"
 # 1. This repo's skills -> ~/.agents/skills
 remove_dead_links "$agents_skills"
 for skill in "$repo"/skills/*/; do
+  [ -d "$skill" ] || continue
   skill="${skill%/}"
   set_link "$agents_skills/$(basename "$skill")" "$skill"
 done
@@ -45,6 +46,7 @@ done
 # 2. Everything in ~/.agents/skills -> ~/.claude/skills
 remove_dead_links "$claude_skills"
 for skill in "$agents_skills"/*/; do
+  [ -d "$skill" ] || continue
   skill="${skill%/}"
   set_link "$claude_skills/$(basename "$skill")" "$agents_skills/$(basename "$skill")"
 done
