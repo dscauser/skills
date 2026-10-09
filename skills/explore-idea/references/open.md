@@ -14,6 +14,13 @@ which other branch the idea belongs in; switch to it when that becomes clear.
 - Who would care about it besides the user?
 - What would make this conversation worthwhile even if nothing happens next?
 
+## Words to pin down
+
+Common sources of talking past each other. Check the ones the idea uses.
+
+- The key noun of the idea: ask what it means to the user before anything else.
+- Any word doing a lot of work ("better", "community", "simple"): better how, for whom?
+
 ## Thinking moves (for Widen)
 
 Use two or three that fit.

@@ -1,6 +1,6 @@
 ---
 name: explore-idea
-description: Explores a raw idea before anyone commits to it, as a short back-and-forth with an honest sparring partner. Sharpens the idea, widens it with alternatives the user had not considered, pushes back, trims it to the smallest version worth trying, and ends with a one-page brief plus optional extras (Mermaid mind map, 1-5 slide HTML visual, short HTML animation). Has branches for software (build), business and customer ideas (commercial, marketing, UX, merchandising), people and HR ideas, personal everyday ideas, and an open catch-all. Use when the user says "I have an idea", "what do you think of this idea", "help me think this through", "explore this idea", "brainstorm", "sanity-check this", "is this worth doing", "bounce an idea off you", "pre-ideate", or describes something they are thinking of doing at work or at home and wants a second opinion, even if they do not name the skill.
+description: Explores a raw idea before anyone commits to it, as a short back-and-forth with an honest sparring partner. Pins down what the user actually means, sharpens the idea, widens it with alternatives the user had not considered, pushes back, trims it to the smallest version worth trying, and ends with a one-page brief plus optional extras (Mermaid mind map, 1-5 slide HTML visual, short HTML animation). Has branches for software (build), business and customer ideas (commercial, marketing, UX, merchandising), people and HR ideas, personal everyday ideas, and an open catch-all. Use when the user says "I have an idea", "what do you think of this idea", "help me think this through", "explore this idea", "brainstorm", "sanity-check this", "is this worth doing", "bounce an idea off you", "pre-ideate", or describes something they are thinking of doing at work or at home and wants a second opinion, even if they do not name the skill.
 ---
 
 # Explore Idea
@@ -18,8 +18,11 @@ End every wrap-up with one line: what you did not check, and the biggest risk.
   not dismiss. Change your view on new evidence, not on pushback alone.
 - You may disagree with the user's own suggestions and offer a better one.
 - Give your own read before asking for theirs, so you do not just echo them.
-- Ask at most three questions per turn, then wait. This is a conversation, not
-  a form.
+- Shared understanding before judgement. Do not give a verdict on an idea until
+  the user has confirmed you understood it.
+- Find facts yourself. Use the context file, the workspace and the web where
+  available; never ask the user for something you could look up. Decisions
+  stay with the user.
 - Plain language. Match the user's depth.
 - Label any number you did not get from the user or a real source as
   `[estimate]`, with the reasoning in a few words. Never invent figures that
@@ -48,14 +51,40 @@ End every wrap-up with one line: what you did not check, and the biggest risk.
 Switch branch mid-conversation if the idea turns out to be something else, and
 say so in one line.
 
+## How to ask
+
+Ask in rounds, then wait. Each round asks only questions whose prerequisites
+are already settled; a question that depends on another one still open waits
+for the next round. At most about five per round (none or one in quick mode).
+If the user asks to go deeper or harder, drop the cap and keep going until
+nothing is left assumed.
+
+In Sharpen and Trim, number each question and give your answer, worded so
+"yes" accepts it:
+
+❓ **Q1 - <short title>**: <the question, with options if useful>
+
+➡️ **My read:** <your guess at what the user means> (Sharpen, where it is the
+user's intent, not yours to recommend)
+➡️ **Recommend:** <your recommended choice> (Trim, where it is a real decision)
+
+In Widen, keep it conversational: lay out the angles and ask which pulls.
+
 ## The loop
 
 Run these in order, a turn or two each. A quick gut-check can do all five in one
 reply; a richer idea gets real back-and-forth in Widen and Push back.
 
 1. **Sharpen.** Restate the idea in one sentence in your own words. Ask what
-   prompted it and what "this worked" would look like. If the restatement
-   surprises the user, that is the first useful finding.
+   prompted it and what "this worked" would look like, using the branch's
+   questions and its "words to pin down". If the restatement surprises the
+   user, that is the first useful finding.
+   **Playback 1.** End Sharpen with one short paragraph on what the idea is,
+   plus up to three lines of "when you say *X*, I take it you mean *Y*". If a
+   term could reasonably be read two ways, wait for a yes. If the idea is
+   already clear, make it one line ("I'm reading this as… say if not") and
+   carry on. These meanings are provisional: if Widen changes what the idea
+   is, say so in one line and update them.
 2. **Widen.** Before judging, offer 3-5 genuinely different angles in one
    comparable shape (one line each: the angle, who it is for, why it might beat
    the original). Always include "the smallest version" and "do nothing / fix
@@ -71,10 +100,14 @@ reply; a richer idea gets real back-and-forth in Widen and Push back.
 4. **Trim.** Ask "does this need to exist?" of every part. Cut to the smallest
    version that tests the core bet, list what you cut in one line, and name the
    first concrete step and a sign it is working.
+   **Playback 2.** Restate the trimmed shape, the agreed meanings and the first
+   step in a few lines, and wait for a yes before writing any deliverable. This
+   is where the meanings lock.
 5. **Wrap.** Offer the deliverables (below) and produce the ones chosen.
 
 If the user says "just tell me" or "quick", compress to a verdict, the trimmed
-version and the next step in one reply.
+version and the next step in one reply. Both playbacks shrink to one
+non-blocking line.
 
 ## Deliverables
 

@@ -14,6 +14,14 @@ user's life, so they decide; you help them see it clearly.
 - What is the real budget: money, time per week, energy?
 - Who else does it affect?
 
+## Words to pin down
+
+Common sources of talking past each other. Check the ones the idea uses.
+
+- "Budget": money only, or time and energy too? Per week or in total?
+- "Regularly": daily, weekly, or "when I feel like it"?
+- "Worth it": by what measure (money saved, enjoyment, health)?
+
 ## Thinking moves (for Widen)
 
 Use two or three that fit.

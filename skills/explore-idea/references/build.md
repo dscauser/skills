@@ -11,6 +11,15 @@ and spreadsheets or manual processes that want to become software.
 - How often does the problem happen, and how painful is it each time?
 - What would make them say "this worked" one month after it exists?
 
+## Words to pin down
+
+Common sources of talking past each other. Check the ones the idea uses.
+
+- "App": phone app, web page, spreadsheet, or a bot in a chat tool?
+- "User": the person asking, their team, customers, or the public?
+- "Automate": fully hands-off, or a button someone still presses?
+- "Real-time": instant, every few minutes, or daily is fine?
+
 ## Thinking moves (for Widen)
 
 Use two or three that fit, not all of them.

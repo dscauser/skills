@@ -4,11 +4,15 @@
     {
       "id": 1,
       "prompt": "I've got an idea - what if we did a 'buddy' scheme where every new starter gets paired with someone from a different department for their first month? Want to think it through before I take it to my HR director.",
-      "expected_output": "Picks the people branch, restates the idea, asks at most three questions, then over the conversation offers alternative angles (smaller pilot, opt-in, manager-led), pushes back on workload, fairness and adoption, trims to a pilot, and ends with a one-page brief plus a menu of optional extras.",
+      "expected_output": "Picks the people branch, restates the idea, asks numbered questions with its read on each, plays back the idea and key terms before widening, then over the conversation offers alternative angles (smaller pilot, opt-in, manager-led), pushes back on workload, fairness and adoption, trims to a pilot, and ends with a one-page brief plus a menu of optional extras.",
       "files": [],
       "expectations": [
         "Reads references/people.md and works from the people branch",
-        "First reply restates the idea in one sentence and asks no more than three questions, without producing the brief yet",
+        "First reply restates the idea in one sentence and asks no more than five questions, without producing the brief yet",
+        "Sharpen questions use the numbered ❓ format with a '➡️ My read:' line worded so 'yes' accepts it",
+        "Before Widen, plays back the idea with at least one 'when you say X, I take it you mean Y' line (e.g. what 'buddy' or 'first month' involves) and waits for confirmation",
+        "Before writing the brief, plays back the trimmed shape and first step and waits for a yes",
+        "The brief includes a 'What we mean by' section with the terms agreed",
         "Offers at least three genuinely different angles, including a smaller or pilot version",
         "Raises at least one concern about buddy workload, fairness or adoption",
         "Does not give legal advice; flags HR or policy review if relevant",
@@ -23,6 +27,7 @@
       "expectations": [
         "Uses the business branch and names the lens it chose",
         "Compresses to a single reply with a go, reshape or park verdict",
+        "Gives a one-line non-blocking reading of the idea instead of waiting for confirmation",
         "Suggests a small trial such as an A/B test on one category or segment",
         "Mentions the margin or cannibalisation risk without inventing unlabelled figures",
         "Ends with a line naming what was not checked and the biggest risk"

@@ -14,6 +14,15 @@ changes, team structure and internal communications.
   went badly?
 - Who has to say yes, and who has to actually do something differently?
 
+## Words to pin down
+
+Common sources of talking past each other. Check the ones the idea uses.
+
+- "Optional": genuinely opt-in, or expected but not enforced?
+- "Scheme" or "programme": a one-off, a pilot, or a permanent policy?
+- "Flexible": flexible for whom, and within what limits?
+- "Manager": line manager, department head, or HR business partner?
+
 ## Thinking moves (for Widen)
 
 Use two or three that fit.

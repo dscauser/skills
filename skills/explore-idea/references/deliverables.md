@@ -22,6 +22,10 @@ under "Branch notes".
 ## The idea
 <One or two sentences, in plain words.>
 
+## What we mean by
+- **<term>:** <the meaning agreed in the conversation>
+<Only terms that were actually pinned down. Leave the section out if none.>
+
 ## Why it matters
 <The problem or opportunity, and who feels it.>
 

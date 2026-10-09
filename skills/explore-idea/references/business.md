@@ -33,6 +33,16 @@ Customer lens:
   journey.
 - What do they do or feel now, and what should be different after?
 
+## Words to pin down
+
+Common sources of talking past each other. Check the ones the idea uses.
+
+- "Customer": which segment (trade, consumer, new, existing)?
+- "Pilot" or "trial": how big, how long, and who decides if it passed?
+- "Margin": gross margin or markup, percentage or cash?
+- "Success": which number, from what to what, by when?
+- "Bundle" or "offer": a discount, a pack, a recommendation, or a promotion?
+
 ## Thinking moves (for Widen)
 
 Use two or three that fit.
