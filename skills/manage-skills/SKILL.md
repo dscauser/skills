@@ -1,6 +1,6 @@
 ---
 name: manage-skills
-description: Use when creating, adding, installing, moving, publishing, syncing, or checking agent skills on this machine — "make a new skill", "add this skill", "install this third-party skill", "make this skill public", "sync my skills", "pull/push my skills", "set up my skills on a new machine", "why isn't my skill showing up", or anything about ~/.agents/skills, ~/.claude/skills, or the user's skills repositories.
+description: Manages the agent skills on this machine. Decides which repo a new skill belongs in (public or private, with a privacy check before anything goes public), installs third-party skills without committing them, moves skills between repos, syncs the repos, sets up a new machine, and diagnoses skills that do not show up. Use whenever the user says "make a new skill", "turn this into a skill", "add this skill", "install this third-party skill", "make this skill public", "sync my skills", "pull/push my skills", "set up my skills on a new machine", "why isn't my skill showing up", or mentions ~/.agents/skills, ~/.claude/skills, or their skills repositories.
 ---
 
 # Manage Skills
@@ -51,6 +51,11 @@ have only the public repo, only a private one, or neither yet.
 A new harness that reads neither folder needs its own mirror step in the
 install scripts. Check its docs before adding one.
 
+Claude Code also loads skills from two places this skill does not manage:
+`~/.claude/skills/synced` (skills from the user's claude.ai account) and
+`~/.claude/plugins` (plugin skills, shown as `plugin:skill`). A skill that
+appears twice usually comes from one of those.
+
 ## OS-managed skills (e.g. Omarchy)
 
 Some systems ship their own skills and link them into the skills folders
@@ -72,7 +77,7 @@ Run the repo's script after any change to the skill set. Always run it from
 the repo, not from a copy.
 
 - Windows: `pwsh <repo>/install.ps1` (add `-WhatIf` for a dry run)
-- Mac/Linux: `<repo>/install.sh`
+- Mac/Linux: `sh <repo>/install.sh`
 
 It does three things:
 
@@ -82,9 +87,10 @@ It does three things:
 
 It also removes links whose target is gone. It never deletes a real folder.
 Instead it prints `SKIPPED` and leaves the folder alone. Running either repo's
-script refreshes step 2 for everything, including third-party skills. After it
-runs, tell the user to restart the agent (or start a new session) so it loads
-the new skills.
+script refreshes step 2 for everything, including third-party skills.
+
+Skills load at session start. After the script runs, tell the user to restart
+the agent or start a new session.
 
 ## Tasks
 
@@ -98,13 +104,36 @@ the new skills.
    - anything the user calls personal
 
    Otherwise default to public.
-2. Create `<repo>/skills/<name>/SKILL.md` with `name` and `description`
-   frontmatter. The description says *when* to use the skill and lists the
-   phrases that should trigger it. If the skill needs a Claude subagent, put
-   its definition in `<repo>/agents/`.
-3. Add a row to the repo README's skills table.
-4. **Public repo only: run the privacy check (below) on the new files.**
-5. Run the install script, then commit. Ask before pushing to a public repo
+2. **Capture what the skill is for.** If the conversation already contains
+   the workflow ("turn this into a skill"), take the steps, tools and the
+   user's corrections from it. Otherwise ask: what should it let the agent
+   do, what should trigger it, and what does a good result look like.
+3. **Write `<repo>/skills/<name>/SKILL.md`.** Keep to these, which follow
+   Anthropic's skill authoring guide:
+   - `name` matches the folder: lowercase letters, digits and hyphens, at most
+     64 characters, and the same pattern as the other skills (imperative
+     verb phrases such as `manage-skills`). Not a name an OS-managed skill
+     already uses.
+   - `description` says what the skill does and when to use it, in the third
+     person, listing the phrases that should trigger it. Lean towards
+     over-triggering: skills are missed far more often than misused.
+   - Body under 500 lines. Long material goes in `references/` or
+     `scripts/`, linked directly from SKILL.md, one level deep.
+   - Say only what the agent would not already know. Be exact where a step
+     is fragile, loose where judgment helps.
+   - Forward slashes in paths, no dates or "as of" facts, one term per
+     concept.
+   - If the skill needs a Claude subagent, put its definition in
+     `<repo>/agents/`.
+4. **Test it.** Write three realistic prompts in
+   `<repo>/skills/<name>/evals/evals.json` (see this skill's own
+   `evals/evals.json` for the shape). If the `skill-creator` skill is
+   available, use it to run them against a no-skill baseline and to tune the
+   description. Otherwise run them yourself in a fresh session and fix what
+   the agent got wrong.
+5. Add a row to the repo README's skills table.
+6. **Public repo only: run the privacy check (below) on the new files.**
+7. Run the install script, then commit. Ask before pushing to a public repo
    unless the user already said to publish.
 
 ### Add a third-party skill (someone else's)
@@ -159,8 +188,7 @@ git clone https://github.com/<owner>/skills-private.git ~/code/skills-private
 
 Then run each repo's install script.
 
-- **Windows:** use `$HOME\code\...` paths and `pwsh`. Junctions need no admin
-  rights.
+- **Windows:** `~` is `$HOME`; use `pwsh`. Junctions need no admin rights.
 - **Moving over from an older layout** (e.g. a repo cloned under a different
   folder name): rename or re-clone the folder, then run the install scripts.
   The old links are dead and get removed.
@@ -169,21 +197,23 @@ Then run each repo's install script.
 
 ### Health check ("why isn't my skill showing up?")
 
-Check, and report:
+Run the check script. It changes nothing and exits 1 if it finds a problem.
 
-- **Dead links** in `~/.agents/skills` or `~/.claude/skills`. The script
-  removes these.
-- **Real folders in `~/.claude/skills`** other than `synced/`. Move them into
-  `~/.agents/skills`.
-- **Skills in `~/.agents/skills` with no matching entry in
-  `~/.claude/skills`.** Re-run the script.
-- **Bad or missing frontmatter:** a `SKILL.md` with no `name`/`description`,
-  or a `name` that doesn't match the folder.
-- **Repos behind their remote, or with unpushed work.**
-- **Duplicate skill names** across repos, third-party folders and OS-managed
-  skills. Only one can be linked.
+- Windows: `pwsh ~/.agents/skills/manage-skills/scripts/check.ps1`
+- Mac/Linux: `sh ~/.agents/skills/manage-skills/scripts/check.sh`
 
-Skills load at session start. A skill added mid-session may need a restart.
+It reports dead links, real folders in `~/.claude/skills`, skills not
+mirrored, missing or mismatched frontmatter, duplicate skill names (across
+repos, third-party folders and OS-managed skills), repo skills not installed,
+install scripts that differ between repos, name clashes with synced skills,
+and each repo's git state (behind, unpushed, uncommitted). Links that reach
+the right folder by another route, such as OS-managed ones, are not reported.
+
+Each `FAIL` line says what to do. Most are fixed by running the install
+script. Then confirm the skill is in `~/.claude/skills` and remind the user to
+restart the session, since skills load at session start. If the script
+reports nothing and the skill still does not trigger, the problem is the
+description: check it names the phrases the user actually used.
 
 ## Privacy check (before anything goes public)
 
