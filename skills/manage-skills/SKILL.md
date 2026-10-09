@@ -39,6 +39,33 @@ checking `~/code/*/install.ps1` or `install.sh`. A repo's visibility comes from
 `gh repo view <owner/name> --json visibility` or from its README. A user may
 have only the public repo, only a private one, or neither yet.
 
+## Which harnesses see the skills
+
+| Harness | How it finds `~/.agents/skills` |
+|---|---|
+| Codex, OpenCode, Pi | Read it directly. Nothing else to do. |
+| Claude Code | Doesn't read it. Uses the `~/.claude/skills` mirror the install script makes. |
+| T3 Code | Has no skills folder of its own. Each provider it drives loads skills as above. |
+| Hermes | Reads `~/.agents/skills` only inside a project. Leave it alone unless the user asks. |
+
+A new harness that reads neither folder needs its own mirror step in the
+install scripts. Check its docs before adding one.
+
+## OS-managed skills (e.g. Omarchy)
+
+Some systems ship their own skills and link them into the skills folders
+themselves. Omarchy links `omarchy` and `diagnose-crash` from
+`/usr/share/omarchy/default/agents/skills` into `~/.agents/skills`,
+`~/.claude/skills` and other harnesses' folders, and refreshes those links on
+updates.
+
+- Leave links that point into system paths like `/usr/share/...` alone. Don't
+  move, edit or commit them, and don't report them as problems.
+- Never give one of the user's skills the same name. Its link would replace
+  the system's, and the next OS update would put the system's back.
+- The install script treats a link that already reaches the right folder by
+  another route as fine, so it doesn't rewrite the system's links.
+
 ## The install script
 
 Run the repo's script after any change to the skill set. Always run it from
@@ -153,8 +180,8 @@ Check, and report:
 - **Bad or missing frontmatter:** a `SKILL.md` with no `name`/`description`,
   or a `name` that doesn't match the folder.
 - **Repos behind their remote, or with unpushed work.**
-- **Duplicate skill names** across repos and third-party folders. Only one can
-  be linked.
+- **Duplicate skill names** across repos, third-party folders and OS-managed
+  skills. Only one can be linked.
 
 Skills load at session start. A skill added mid-session may need a restart.
 
@@ -180,7 +207,7 @@ cached or indexed even if it is reverted later.
 - Only the user's own skills go in the repos. Third-party skills never do.
 - Never delete a real skill folder to make room for a link. Move it and tell
   the user.
-- Never touch `~/.claude/skills/synced`.
+- Never touch `~/.claude/skills/synced` or links to OS-managed skills.
 - Keep `install.ps1` and `install.sh` identical across the user's repos. If you
   fix one, copy the fix to the others.
 - Ask before creating a GitHub repo, changing a repo's visibility, or pushing

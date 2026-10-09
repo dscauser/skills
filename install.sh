@@ -17,7 +17,8 @@ claude_agents="$HOME/.claude/agents"
 
 set_link() { # set_link <link> <target>
   if [ -L "$1" ]; then
-    if [ "$(readlink "$1")" = "$2" ]; then echo "ok       $1"; return; fi
+    # Same folder by another route (e.g. a link Omarchy manages): leave it.
+    if [ "$(readlink -f "$1")" = "$(readlink -f "$2")" ]; then echo "ok       $1"; return; fi
     rm "$1"
   elif [ -e "$1" ]; then
     echo "SKIPPED  $1 is a real file or folder, not a link. Move or delete it yourself, then run this again." >&2
