@@ -1,0 +1,43 @@
+{
+  "skill_name": "manage-skills",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "My humanizer skill has stopped showing up in Claude Code. Can you work out why?",
+      "expected_output": "Runs the health check script, reports what it found in plain words, applies the fix it points to (usually re-running a repo's install script), confirms the skill is now linked in ~/.claude/skills, and tells the user to restart the session.",
+      "files": [],
+      "expectations": [
+        "Runs scripts/check.ps1 or scripts/check.sh from the manage-skills folder rather than inspecting folders by hand",
+        "Explains the cause found (dead link, real folder in ~/.claude/skills, missing mirror, or bad frontmatter) in plain language",
+        "Fixes it by running a repo's install script, not by creating links or folders by hand",
+        "Does not delete any real skill folder",
+        "Tells the user to restart Claude Code or start a new session so the skill loads"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Install the docx skill from github.com/anthropics/skills on this machine.",
+      "expected_output": "The skill lands in ~/.agents/skills/docx as a plain folder, is mirrored into ~/.claude/skills by the install script, and nothing is added to or committed in either of the user's repos.",
+      "files": [],
+      "expectations": [
+        "Places the skill in ~/.agents/skills/docx as a plain folder, using npx skills add or a copy that keeps the LICENSE",
+        "Does not copy the skill into ~/code/skills or ~/code/skills-private, and makes no commit",
+        "Runs one of the repos' install scripts so the skill appears in ~/.claude/skills",
+        "Tells the user to restart the session"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Make my cover-letter skill public.",
+      "expected_output": "Runs the privacy check before moving anything, finds that the skill holds the user's name, CV and employment detail, stops and shows the user, and proposes keeping the personal version private with a generic public version under a different name. Nothing is moved or pushed without the user's say-so.",
+      "files": [],
+      "expectations": [
+        "Runs the privacy check on the skill's files and git history before any git mv, commit or push",
+        "Identifies the personal content (name, CV, employment history) and stops to show the user instead of proceeding",
+        "Proposes keeping the personal skill private and creating a generic public version under a different name",
+        "Does not push anything to the public repo without explicit confirmation",
+        "Does not push private git history into the public repo"
+      ]
+    }
+  ]
+}
