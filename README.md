@@ -8,6 +8,7 @@ Agent skills by Danny Causer, free to use. Each skill is a folder with a
 | Skill | What it does |
 |---|---|
 | [`delegate`](skills/delegate/SKILL.md) | Keeps Claude Opus as the orchestrator and final judge, and hands token-heavy research, coding and testing to Sonnet subagents at medium or high effort. Ships with the two subagent definitions it uses (`agents/sonnet-medium.md`, `agents/sonnet-high.md`). |
+| [`explore-idea`](skills/explore-idea/SKILL.md) | An honest sparring partner for a loose idea, before any planning or building. Sharpens it, widens it with alternatives, pushes back and trims it to the smallest version worth trying, with branches for software, business and customer ideas, people and HR ideas, personal ideas, and an open catch-all. Ends with a one-page brief and optional extras: a Mermaid mind map, a 1-5 slide HTML visual and a short HTML animation (MP4 via HyperFrames if installed). Reads an optional context file (`context.example.md`) for company or personal background. |
 | [`manage-skills`](skills/manage-skills/SKILL.md) | Teaches an agent this repo's layout: create skills in the right repo (public or private, with a privacy check before anything goes public), add third-party skills without committing them, move skills between repos, sync, set up a new machine, and diagnose skills that don't show up. Ships with `scripts/check.ps1` and `scripts/check.sh`, a read-only health check of the whole layout. |
 
 ## Use a single skill

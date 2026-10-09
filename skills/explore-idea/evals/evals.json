@@ -1,0 +1,46 @@
+{
+  "skill_name": "explore-idea",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I've got an idea - what if we did a 'buddy' scheme where every new starter gets paired with someone from a different department for their first month? Want to think it through before I take it to my HR director.",
+      "expected_output": "Picks the people branch, restates the idea, asks at most three questions, then over the conversation offers alternative angles (smaller pilot, opt-in, manager-led), pushes back on workload, fairness and adoption, trims to a pilot, and ends with a one-page brief plus a menu of optional extras.",
+      "files": [],
+      "expectations": [
+        "Reads references/people.md and works from the people branch",
+        "First reply restates the idea in one sentence and asks no more than three questions, without producing the brief yet",
+        "Offers at least three genuinely different angles, including a smaller or pilot version",
+        "Raises at least one concern about buddy workload, fairness or adoption",
+        "Does not give legal advice; flags HR or policy review if relevant",
+        "Wrap-up produces a brief that follows the template and offers mind map, visual and animation as optional extras"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Quick one: should our site show 'frequently bought together' bundles on product pages with a small discount? Just tell me what you think.",
+      "expected_output": "Picks the business branch with the customer lens (or commercial if the margin question dominates), compresses into one reply because the user said quick: verdict, the trimmed test (A/B on one category), the margin risk labelled as estimate, the first step, and the closing not-checked line.",
+      "files": [],
+      "expectations": [
+        "Uses the business branch and names the lens it chose",
+        "Compresses to a single reply with a go, reshape or park verdict",
+        "Suggests a small trial such as an A/B test on one category or segment",
+        "Mentions the margin or cannibalisation risk without inventing unlabelled figures",
+        "Ends with a line naming what was not checked and the biggest risk"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I keep thinking about building an app that tracks what's in my freezer so I stop wasting food. Explore this with me, and at the end I'd like the mind map and a little animation.",
+      "expected_output": "Picks build (or personal, noting the overlap), widens with no-code options like a shared list or whiteboard, pushes back on whether an app is needed at all, trims to the smallest version, then writes ideas/<slug>/brief.md, mindmap.md with a valid Mermaid mindmap, and a self-contained animation.html with a replay button and reduced-motion fallback.",
+      "files": [],
+      "expectations": [
+        "Offers at least one no-code or do-nothing alternative to building an app",
+        "Pushes back honestly on whether the user will keep the tracker up to date",
+        "Writes the files under an ideas/<slug>/ folder and tells the user the path",
+        "mindmap.md contains a fenced mermaid block starting with 'mindmap' that parses",
+        "animation.html has no external script, font or image requests, includes a replay control and handles prefers-reduced-motion",
+        "Mentions HyperFrames for MP4 only as an option and does not install anything without asking"
+      ]
+    }
+  ]
+}

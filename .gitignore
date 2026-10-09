@@ -12,3 +12,6 @@ Thumbs.db
 # Drafts and scratch output from running skills
 *.tmp
 scratch/
+
+# explore-idea: personal context stays local
+skills/explore-idea/context.md
