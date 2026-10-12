@@ -1,0 +1,45 @@
+{
+  "skill_name": "imp",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/imp okay so in the dashboard app, the er the login page, when you put the wrong password it just sort of hangs, no error, I want it to show a message under the form, something like invalid email or password, oh and don't change the auth API itself cos the mobile app uses it too, and use the existing toast thing, no actually not the toast, inline under the form",
+      "expected_output": "Asks at most 3 numbered questions with A/B/C options and a recommendation each (e.g. how to verify, exact message wording), ending with the 'Reply like 1B, 2A' line and nothing else. After 'yes', outputs only a four-backtick code block containing a direct instruction to show an inline error under the login form on wrong password, with the auth API left unchanged because the mobile app depends on it.",
+      "files": [],
+      "expectations": [
+        "Asks no more than 3 questions, numbered, each with lettered options and a '→ Recommend' line",
+        "Ends the question message with the 'Reply like `1B, 2A`' line and adds nothing else",
+        "Uses the later correction: inline message under the form, not a toast",
+        "Keeps the constraint that the auth API stays unchanged, with the reason (mobile app uses it)",
+        "Final output is a single code block fenced with four backticks, with no intro or sign-off",
+        "Does not add requirements the user did not say or confirm, and uses no 'CRITICAL' or 'IMPORTANT'"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Can you clean up this prompt: um write me a bash one liner that, like, finds all the dot log files over a hundred meg in var log and er lists them by size biggest first",
+      "expected_output": "No questions, because the ask is clear. Outputs only a short four-backtick code block asking for a bash one-liner that finds .log files over 100 MB in /var/log and lists them by size, largest first.",
+      "files": [],
+      "expectations": [
+        "Asks no clarifying questions",
+        "Output is only the rewritten prompt in a four-backtick code block",
+        "Keeps every detail: bash, one-liner, .log files, over 100 MB, /var/log, sorted largest first",
+        "Stays a few plain lines, without Context/Constraints/Done when sections"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "improve this prompt for me: so I want clawed code to go through the repo and er upgrade next js to the latest version, we're on fourteen I think, and the tests have to still pass, we run them with pnpm test, and play right end to end ones too, um don't touch the payments folder at all because that's being audited right now",
+      "expected_output": "Fixes misheard words (Claude Code, Next.js, Playwright), checks the current Next.js version from package.json if the repo is available instead of asking, asks at most 3 questions only if gaps would change the prompt, then outputs a prompt using the default shape with task, context, the payments-folder constraint with its reason, and Done when including pnpm test and the Playwright tests.",
+      "files": [],
+      "expectations": [
+        "Corrects 'clawed code' to Claude Code, 'next js' to Next.js and 'play right' to Playwright",
+        "Checks the Next.js version from the environment if possible, or tells the new session to find it, rather than stating 14 as fact",
+        "Keeps the constraint to leave the payments folder untouched, with the reason that it is being audited",
+        "Includes 'pnpm test' and the Playwright end-to-end tests as the verification in Done when",
+        "Opens with a direct instruction to act and keeps the user's first-person voice",
+        "Final output is a single four-backtick code block with no intro or sign-off"
+      ]
+    }
+  ]
+}
