@@ -41,11 +41,16 @@ because each one fixes a problem a presenter hit.
    needs one line that stands without the speaker). End with: Reply like
    `1B, 2A`, add notes, or say yes to take all recommendations.
 
-4. **Build** from [assets/template.html](assets/template.html). It is a
-   working gallery of slide patterns. Copy it to the workspace, keep the
-   patterns that fit, delete the rest, replace the content, and set the
-   theme in `:root` only. Pattern catalogue and the build attributes:
-   [references/build-patterns.md](references/build-patterns.md).
+4. **Design each slide for this topic, then build.** For every idea in the
+   slide plan, decide what the audience should *see* happen (see "Choosing
+   the visual" in the design rules). Only then pick a pattern from
+   [assets/template.html](assets/template.html) that shows it, adapt one, or
+   write a new one with the same build attributes. The template is the
+   engine plus placeholder slides, not a talk to reuse: copy it to the
+   workspace, delete every slide you do not need, and never carry over
+   wording, examples or mock-ups from earlier talks. Set the theme in
+   `:root` and the wordmark/footer text only. Pattern catalogue and build
+   attributes: [references/build-patterns.md](references/build-patterns.md).
 
 5. **Check it in a browser** if one is available. Click through every slide
    in order, then backwards. Confirm: no console errors, every slide reaches

@@ -18,13 +18,14 @@
     },
     {
       "id": 2,
-      "prompt": "Use my company theme and turn these slide screenshots into an interactive HTML visual aid for my demo slot tomorrow. [3 slide screenshots attached] Most of the audience are non-managers from HR, merchandising and marketing.",
-      "expected_output": "Reads the context file for brand colours and audience notes, samples colours from the screenshots where helpful, asks at most 3 questions, and builds a themed file whose examples fit non-managers, with a demo-intro slide and a closing slide.",
+      "prompt": "Use my company theme. I'm doing a 20-minute session for the marketing team on how our paid search changed this year: we moved budget from broad match to exact match, cost per click went down 18%, conversions up 12%, and we cut 40 wasted keywords. I'll demo the new reporting dashboard live halfway through. Make me a visual aid to click through on Teams.",
+      "expected_output": "Reads the context file for brand and audience, asks at most 3 questions with recommendations, then builds a themed single-file aid designed for paid search: metrics that count up, a before/after of the budget split, a demo-intro slide and a close. It does not carry over prompting, skill or Copilot content from the template's history.",
       "files": [],
       "expectations": [
         "Looks for visual-aid-context.md in the workspace and context.md next to SKILL.md before asking about the theme",
         "Applies the theme by changing only the :root variables and the wordmark/footer text",
-        "Picks examples from everyday work for non-managers, not executive scenarios",
+        "Uses a metrics-style visual for the CPC and conversion figures, with the figures given by the user and none invented",
+        "Contains no leftover template placeholder text and no content about prompting, skills or Copilot",
         "Includes a slide that introduces the live demo",
         "Does not add the presenter's job title unless asked"
       ]

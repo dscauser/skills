@@ -35,6 +35,28 @@
   screenshare, can animate), based on the user's own screenshots when given,
   and label them "Illustration".
 
+## Choosing the visual
+
+Start from the idea, not the pattern list. Ask what the audience should see
+change on screen, then show exactly that. Some starting points:
+
+| The idea is… | Show it as… | Template pattern |
+|---|---|---|
+| Stop doing X | Items struck through | `strike-list` |
+| Good vs bad version | Weak swaps to strong, parts colour-coded | `weak-to-strong` |
+| Adding Y changes the result | Setup + addition → before → after | `cause-effect` |
+| How to tell it's done or right | Criteria ticking in | `checklist` |
+| Results, growth, performance (SEO, PPC, sales) | Numbers counting up, bars growing | `metrics` |
+| Where it lives in a tool | Redrawn screens, click by click | `ui-walkthrough` |
+| What's inside a file, page or ad | Parts highlighted in turn with a callout | `anatomy` |
+| A repeatable process | Ring filling with a step list | `cycle` |
+| Introducing a live demo | In → process → out | `pipeline` |
+| Funnel, hierarchy, timeline, map, ranking | Write a new pattern (stacked bars, a funnel, a timeline that draws, a mock search results page) | none yet |
+
+If no pattern fits, write a new one rather than forcing the idea into the
+nearest pattern. Two slides in a row using the same pattern is a sign the
+talk needs a different visual.
+
 ## Look
 
 - **Light theme by default.** Dark backgrounds and fine detail suffer most from

@@ -18,31 +18,37 @@ Set on elements inside a slide:
 |---|---|
 | `data-step="k"` | Hidden until step k, then fades and rises in |
 | `data-until="k"` | Visible until step k, then fades out (pair with `data-step` in a `.stack` to swap) |
-| `data-on="k"` | Gets class `.on` from step k (strike-throughs, highlights, lit nodes) |
-| `data-hl="k"` | Gets `.hl` only at step k; the rest of the slide's `data-hl` items dim |
+| `data-on="k"` | Gets class `.on` from step k (strike-throughs, highlights, lit nodes, growing bars) |
+| `data-hl="k"` | Gets `.hl` only at step k; the slide's other `data-hl` items dim |
 | `data-spark` | Sparkle burst when its `data-step` is reached going forward |
+| `data-count="42"` | Inside the `metrics` slide: counts up from 0 at step 1 (`data-dp` for decimals) |
 | `.enter` | Staggered entrance when the slide arrives (do not combine with `data-step`) |
 
 `.stack` puts its children in one grid cell so they can replace each other.
+A hook in `hooks` runs on every step change for the slide with that `data-id`;
+use one for anything the attributes cannot express (counters, typed text, SVG).
 
 ## Patterns in the template
 
-Each is a slide in `assets/template.html`. Keep the markup, change the words.
+All content in the template is placeholder text. Keep the markup, write new
+content for the topic.
 
-| Slide `data-id` | Pattern | Use it for | Click plan |
-|---|---|---|---|
-| (first slide) | Title | Talk name, presenter name | 0 |
-| `habits` | Cards struck through | "Stop doing these" | 1 click, `data-auto` the rest, caption last |
-| `brief` | Vague → strong, colour-coded | Showing what a good version contains | Click to swap in, auto colour-code + legend |
-| `reason` | Prompt + added clause → input → output, with chips | Cause and effect, "why this matters" | Click per block, auto the chips |
-| `test` | Weak vs checklist ticks | Criteria, definitions of done | 1 click, auto ticks |
-| `copilot` | Product UI walkthrough (sidebar → builder → modal → done) with breadcrumbs | "Where to find it" in a real tool | Click to start each screen, auto the follow-on |
-| `skillmd` | File anatomy with highlighted lines and a callout per part | Explaining a file, form or template | Click per part; merge trivial parts with auto |
-| `write` | Ring of 5 steps with a matching list | A process or cycle | 1 click, auto all |
-| `imp` | Pipeline: in → asks → out, typed input, "LIVE DEMO" badge | Introducing a live demo | Click per stage, auto the badge |
-| `close` | Next steps row + formula chips + "Questions?" | Close | 0, auto on arrival |
+| `data-id` | Pattern | Click plan |
+|---|---|---|
+| (first slide) | Title: talk name, presenter name only | 0 |
+| `strike-list` | Cards struck through, then a one-line reason | 1 click, rest auto |
+| `weak-to-strong` | Weak example swaps to strong, parts colour-coded with a legend | 1 click, colour-coding auto |
+| `cause-effect` | Setup + added clause, before → after side by side, change chips and a payoff line | 1 click per block, chips auto |
+| `checklist` | Vague instruction vs criteria ticking in | 1 click, ticks auto |
+| `metrics` | Stat cards counting up with bars growing | 1 click |
+| `ui-walkthrough` | Redrawn app screens: sidebar → settings → upload → done, breadcrumbs, "Illustration" label | 2 clicks |
+| `anatomy` | A file or page with parts highlighted and a callout per part | 1 click per part; trivial parts auto |
+| `cycle` | Ring of 5 steps filling while a list builds (edit `ringItems` in the script) | 1 click, rest auto |
+| `pipeline` | In → process → out with typed input (edit `ramble`) and a LIVE DEMO badge | 2 clicks, badge auto |
+| `close` | Next actions, recap chips, "Questions?" | 0 |
 
 ## Adding a pattern
 
-Write it with the same attributes, keep its text inside the content rules,
-and give any element with a transition an explicit property list.
+Use the same attributes, keep text inside the content rules, give every
+transitioned element an explicit property list (never `transition: all`),
+and add a row here if it would be useful again.
