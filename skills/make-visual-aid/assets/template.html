@@ -1,0 +1,696 @@
+<!doctype html>
+<!--
+  Visual-aid template: a working gallery of every slide pattern.
+  Copy it, keep the patterns the talk needs, delete the rest, replace the content.
+  Theme: edit the :root variables only (--primary, --accent, --accent-rgb, --bg, fonts).
+  Build attributes (see references/build-patterns.md):
+    data-steps="N"   on a slide: number of build steps
+    data-auto="2,3"  steps that play by themselves after the previous one
+    data-delay="900" ms between auto steps
+    data-step="k"    element appears at step k        data-until="k"  element leaves at step k
+    data-on="k"      gets class .on from step k       data-hl="k"     highlighted only at step k
+    data-spark       sparkle burst when its data-step is reached going forward
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prompting: What's Changed</title>
+<style>
+  :root{
+    --bg:#F5F7FB; --ink:#18223D; --muted:#5B6884; --primary:#1E293B; --accent:#2563EB; --accent-rgb:37,99,235; --line:#DCE2EC; --card:#FFFFFF;
+    --blue:#2B86DB; --amber:#D99A00; --green:#18A56B; --purple:#7A5AE0; --soft:#EEF2F8;
+    --ease:cubic-bezier(.2,.8,.2,1);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);overflow:hidden;
+    font-family:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+  button{font:inherit;color:inherit}
+  a{color:inherit}
+
+  /* backdrop: echoes the deck's grey slant, static so screenshare stays sharp */
+  .backdrop{position:fixed;inset:0;z-index:0;pointer-events:none}
+  .backdrop .slant{position:absolute;top:0;right:0;width:24vw;height:100%;background:linear-gradient(180deg,#E8ECF3,#EEF1F6);clip-path:polygon(18% 0,100% 0,100% 100%,62% 100%)}
+  .backdrop .dots{position:absolute;inset:0;background-image:radial-gradient(#D5DCE8 1.2px,transparent 1.2px);background-size:28px 28px;mask-image:linear-gradient(90deg,#000 0,transparent 55%);-webkit-mask-image:linear-gradient(90deg,#000 0,transparent 55%);opacity:.7}
+  #fx{position:fixed;inset:0;z-index:40;pointer-events:none;width:100%;height:100%}
+
+  /* frame */
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:22px 44px 0}
+  .topic{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;color:var(--muted)}
+  .topic i{width:10px;height:10px;border-radius:2px;background:var(--accent)}
+  .brand{font-weight:900;font-size:26px;letter-spacing:.02em;color:var(--primary);position:relative;padding-bottom:3px}
+  .brand:after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:5px;background:var(--accent)}
+  .rule{position:fixed;top:68px;left:44px;right:30vw;height:2px;background:linear-gradient(90deg,var(--primary),rgba(20,58,112,0));z-index:5;opacity:.5}
+  .bottombar{position:fixed;bottom:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:0 44px 0;height:64px;background:var(--primary);color:#fff}
+  .bottombar .meta{font-size:12px;font-weight:700;letter-spacing:.03em}
+  .dots{display:flex;gap:7px;align-items:center}
+  .dot-btn{width:9px;height:9px;border-radius:9px;background:rgba(255,255,255,.45);border:0;padding:0;cursor:pointer;transition:all .4s var(--ease)}
+  .dot-btn.cur{width:32px;background:#fff}
+  .pips{display:flex;gap:5px;margin-left:14px}
+  .pip{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);transition:background .3s}
+  .pip.done{background:#fff}
+  .navs{display:flex;align-items:center;gap:10px}
+  .counter{font-family:Consolas,monospace;font-size:13px;margin-right:6px;opacity:.9}
+  .navbtn{width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(255,255,255,.6);background:transparent;color:#fff;font-size:18px;cursor:pointer;display:grid;place-items:center;transition:background .2s}
+  .navbtn:hover{background:rgba(255,255,255,.2)}
+  #progress{position:fixed;left:0;bottom:64px;height:4px;background:var(--accent);z-index:6;transition:width .6s var(--ease)}
+  #blank{position:fixed;inset:0;background:#fff;z-index:60;opacity:0;pointer-events:none;transition:opacity .35s}
+  #blank.on{opacity:1;pointer-events:auto}
+
+  /* slides */
+  #stage{position:fixed;inset:0;z-index:2}
+  .slide{position:absolute;inset:84px 0 76px;display:flex;align-items:center;justify-content:center;visibility:hidden}
+  .slide.active{visibility:visible}
+  .wrap{width:min(1240px,88vw)}
+  .eyebrow{color:var(--accent);font-weight:800;letter-spacing:.2em;text-transform:uppercase;font-size:14px}
+  .h1{font-size:clamp(52px,7vw,110px);font-weight:800;line-height:1;letter-spacing:-.035em;margin:0;color:var(--primary)}
+  .h2{font-size:clamp(36px,4.2vw,62px);font-weight:800;line-height:1.05;letter-spacing:-.025em;margin:10px 0 0;color:var(--primary)}
+  .big{font-size:clamp(22px,2.1vw,32px);font-weight:600;line-height:1.3}
+  .sub{font-size:clamp(18px,1.5vw,23px);color:var(--muted)}
+  .accent{color:var(--accent)} .muted{color:var(--muted)}
+  .mono{font-family:"Cascadia Code",Consolas,ui-monospace,monospace}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 1px 2px rgba(24,34,61,.04),0 14px 34px -18px rgba(24,34,61,.28)}
+  .stack{display:grid}.stack>*{grid-area:1/1}
+  .row{display:flex;align-items:center;gap:18px}
+  .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;font-weight:800;font-size:14px;letter-spacing:.1em}
+  .tag{font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .source{position:absolute;left:max(6vw,calc(50% - 620px));bottom:-6px;font-size:13px;color:var(--muted);text-decoration:none;display:inline-flex;gap:8px;align-items:center}
+  .source b{color:var(--primary)}
+  .source:hover b{text-decoration:underline}
+  .label-ill{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--muted);background:var(--soft);border-radius:6px;padding:4px 8px}
+
+  /* builds */
+  [data-step]{opacity:0;transform:translateY(16px);transition:opacity .45s ease,transform .6s var(--ease)}
+  [data-step].shown{opacity:1;transform:none}
+  [data-until]{transition:opacity .4s ease,transform .5s var(--ease)}
+  [data-until].off{opacity:0;transform:scale(.98);pointer-events:none}
+  [data-step][data-until].shown.off{opacity:0}
+  [data-hl]{transition:opacity .35s,background .35s,box-shadow .35s}
+  .hlmode [data-hl]:not(.hl){opacity:.35}
+
+  /* 2 habits */
+  .habits{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:56px}
+  .habit{position:relative;text-align:left;cursor:pointer;background:none;border:0;padding:0}
+  .habit .inner{padding:34px 30px;min-height:200px;display:flex;flex-direction:column;justify-content:space-between;transition:opacity .6s,filter .6s,transform .7s cubic-bezier(.3,1.4,.5,1)}
+  .habit .strike{position:absolute;left:6%;right:6%;top:40%;height:6px;border-radius:6px;background:var(--accent);transform:scaleX(0) rotate(-4deg);transform-origin:left;transition:transform .45s cubic-bezier(.7,0,.3,1)}
+  .habit.on .strike{transform:scaleX(1) rotate(-4deg)}
+  .habit.on .inner{opacity:.35;filter:grayscale(1);transform:translateY(22px) rotate(-2deg) scale(.96)}
+
+  /* 3 brief */
+  .qb{display:inline-block;padding:10px 18px;border-radius:999px;border:2px dashed #C8D1E0;color:var(--muted);font-size:19px;font-weight:600;animation:bob 3s ease-in-out infinite}
+  .qb:nth-child(2){animation-delay:.5s}.qb:nth-child(3){animation-delay:1s}.qb:nth-child(4){animation-delay:1.5s}.qb:nth-child(5){animation-delay:2s}
+  @keyframes bob{50%{transform:translateY(-5px)}}
+  .mk{border-radius:6px;padding:0 .12em;transition:background .7s,box-shadow .7s}
+  .mk.on.t{background:rgba(43,134,219,.13);box-shadow:inset 0 -4px 0 var(--blue)}
+  .mk.on.l{background:rgba(217,154,0,.14);box-shadow:inset 0 -4px 0 var(--amber)}
+  .mk.on.d{background:rgba(24,165,107,.13);box-shadow:inset 0 -4px 0 var(--green)}
+
+  /* 5 testable */
+  .check{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:none;border:2px solid var(--line);color:transparent;font-weight:900;transition:background .5s,border-color .5s,color .5s,transform .5s cubic-bezier(.3,1.6,.5,1)}
+  .shown .check{background:var(--green);border-color:var(--green);color:#fff}
+
+  /* 6 copilot mock */
+  .crumbs{display:flex;gap:10px;align-items:center;margin-top:18px;flex-wrap:wrap}
+  .crumb{font-size:15px;font-weight:700;color:#A3AEC2;transition:color .4s}
+  .crumb.on{color:var(--primary)}
+  .crumb-sep{color:#C5CDDB}
+  .app{width:100%;height:min(470px,52vh);border-radius:16px;overflow:hidden;position:relative;font-size:14px}
+  .app .screen{display:flex;height:100%}
+  .side{width:220px;background:#F3F4F8;border-right:1px solid var(--line);padding:16px 12px;display:flex;flex-direction:column;gap:4px}
+  .side .item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-weight:600;position:relative}
+  .side .newchat{background:#fff;border:1px solid var(--line)}
+  .side .head{font-size:12px;color:var(--muted);font-weight:700;padding:14px 10px 4px}
+  .ico{width:18px;height:18px;border-radius:5px;flex:none}
+  .side .item.on{background:#fff;box-shadow:0 0 0 2px var(--accent)}
+  .side .item.on:after{content:"";position:absolute;inset:-6px;border-radius:12px;border:2px solid var(--accent);animation:ping 1.4s infinite}
+  @keyframes ping{from{opacity:.8;transform:scale(1)}to{opacity:0;transform:scale(1.12)}}
+  .mainpane{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;background:#fff}
+  .msgbox{width:76%;border:1.5px solid #CBD3E1;border-radius:22px;padding:14px 18px 34px;color:#8A95AB}
+  .pills{display:flex;gap:10px}.pills span{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-weight:600;font-size:13px}
+  .cursor{position:absolute;left:150px;top:146px;width:22px;height:22px;transition:opacity .45s ease,transform .6s var(--ease)}
+  .builder{display:flex;height:100%;background:#fff}
+  .builder .left{width:34%;background:#F7F8FB;border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;padding:28px}
+  .builder .right{flex:1;padding:18px 26px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;font-weight:700;font-size:13px}.seg span{padding:6px 14px}.seg .sel{background:var(--soft);color:var(--primary)}
+  .box{border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .box .bt{font-weight:800;font-size:13px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+  .addbtn{border:1.5px solid var(--ink);border-radius:6px;padding:2px 10px;font-size:12px;font-weight:700}
+  .addbtn.on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.18)}
+  .skillrow{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:rgba(24,165,107,.08);border:1px solid rgba(24,165,107,.35);font-weight:700}
+  .modal-veil{position:absolute;inset:0;background:rgba(24,34,61,.35);display:grid;place-items:center}
+  .modal{width:440px;background:#fff;border-radius:14px;padding:22px;box-shadow:0 30px 60px -20px rgba(0,0,0,.4)}
+  .drop{margin-top:14px;border:2px dashed #C8D1E0;border-radius:12px;height:120px;display:grid;place-items:center;color:var(--muted);position:relative}
+  .file{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-weight:700;box-shadow:0 10px 20px -10px rgba(0,0,0,.3)}
+  .flyin{animation:fly .9s var(--ease) both .3s}
+  @keyframes fly{from{transform:translate(160px,-120px) rotate(10deg);opacity:0}to{transform:none;opacity:1}}
+
+  /* 7 SKILL.md */
+  .editor{border-radius:16px;overflow:hidden}
+  .editor .bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--soft);border-bottom:1px solid var(--line);font-weight:700;font-size:14px}
+  .editor .bar i{width:11px;height:11px;border-radius:50%;background:#D3DAE6}
+  .code{padding:16px 0;font-size:clamp(14px,1.15vw,17px);line-height:1.65}
+  .code .ln{padding:1px 22px;border-left:4px solid transparent}
+  .code .hl{background:rgba(var(--accent-rgb),.06);border-left-color:var(--accent)}
+  .k{color:var(--purple);font-weight:700}.c{color:#9AA5BA}.h{color:var(--primary);font-weight:800}
+  .callout{padding:26px 28px;border-left:6px solid var(--accent)}
+
+  /* 8 ring */
+  .orbit{position:relative;width:min(500px,56vh);aspect-ratio:1}
+  .orbit svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+  .orbit .arc{transition:stroke-dashoffset .9s cubic-bezier(.6,0,.2,1)}
+  .node{position:absolute;transform:translate(-50%,-50%);width:150px;text-align:center;padding:12px 10px;border-radius:16px;background:#fff;border:1.5px solid var(--line);font-weight:700;font-size:16px;line-height:1.2;transition:color .45s,border-color .45s,box-shadow .45s,opacity .45s,transform .45s var(--ease);color:#9AA5BA}
+  .node .n{display:block;font-size:12px;font-weight:800;letter-spacing:.15em;margin-bottom:3px}
+  .node.on{color:var(--ink);border-color:rgba(var(--accent-rgb),.45)}
+  .hlmode .node.on:not(.hl){opacity:.8}
+  .node.on .n{color:var(--accent)}
+  .node.hl{transform:translate(-50%,-50%) scale(1.1);border-color:var(--accent);box-shadow:0 12px 30px -10px rgba(var(--accent-rgb),.45)}
+
+  /* 9 imp */
+  .pipe{padding:24px;min-height:340px;display:flex;flex-direction:column}
+  .caret{display:inline-block;width:9px;height:1.1em;background:var(--accent);vertical-align:text-bottom;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .rec{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--green);border:1.5px solid rgba(24,165,107,.45);border-radius:999px;padding:2px 8px}
+  .live{display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border-radius:999px;background:var(--accent);color:#fff;font-weight:800;letter-spacing:.12em;font-size:15px;animation:pulse 2s infinite}
+  .live .dot{width:10px;height:10px;border-radius:50%;background:#fff}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(var(--accent-rgb),.5)}70%{box-shadow:0 0 0 20px rgba(var(--accent-rgb),0)}100%{box-shadow:0 0 0 0 rgba(var(--accent-rgb),0)}}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="backdrop"><div class="dots"></div><div class="slant"></div></div>
+
+<header class="topbar">
+  <div class="topic"><i></i>Talk title</div>
+  <div class="brand">BRAND</div>
+</header>
+<div class="rule"></div>
+
+<main id="stage">
+
+  <!-- 1 Title -->
+  <section class="slide" data-title="Intro">
+    <div class="wrap">
+      <div class="enter eyebrow">Event name</div>
+      <h1 class="enter h1" style="margin-top:22px">Prompting:<br><span class="accent">what's changed</span></h1>
+      <p class="enter sub" style="margin-top:30px">Clear brief · useful context · a testable finish</p>
+      <div class="enter row" style="margin-top:56px">
+        <div style="width:52px;height:52px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:800">PN</div>
+        <div style="font-weight:700;font-size:20px">Presenter Name</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 Old habits -->
+  <section class="slide" data-id="habits" data-steps="4" data-auto="2,3,4" data-delay="650" data-title="Old habits">
+    <div class="wrap">
+      <div class="enter eyebrow">What's changed</div>
+      <h2 class="enter h2">Old habits to <span class="accent">drop</span></h2>
+      <div class="habits">
+        <button class="habit enter" data-on="1"><div class="inner card"><div class="big">“Think really hard about this…”</div><span class="tag">Filler</span></div><span class="strike"></span></button>
+        <button class="habit enter" data-on="2"><div class="inner card"><div class="big">“CRITICAL: you MUST NEVER…”</div><span class="tag">Shouting</span></div><span class="strike"></span></button>
+        <button class="habit enter" data-on="3"><div class="inner card"><div class="big">“First write me a detailed plan…”</div><span class="tag">Plan before work</span></div><span class="strike"></span></button>
+      </div>
+      <div class="big" style="margin-top:56px" data-step="4">Fixes for <span class="muted">older</span> models. Now they can make results <span class="accent">worse</span>.</div>
+    </div>
+    <a class="source enter" href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank">Source <b>Claude prompting best practices</b></a>
+  </section>
+
+  <!-- 3 Vague to brief -->
+  <section class="slide" data-id="brief" data-steps="2" data-auto="2" data-delay="900" data-title="Write a brief">
+    <div class="wrap">
+      <div class="enter eyebrow">Write a short brief</div>
+      <h2 class="enter h2">Say what <span class="accent">done</span> looks like</h2>
+      <div class="enter card stack" style="margin-top:44px;padding:44px;min-height:330px">
+        <div data-until="1">
+          <span class="chip" style="background:rgba(var(--accent-rgb),.1);color:var(--accent)">TOO VAGUE</span>
+          <div class="h2" style="font-weight:600;color:var(--ink);margin-top:22px">“Produce this week's report.”</div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:40px">
+            <span class="qb">Source?</span><span class="qb">Template?</span><span class="qb">Can it change things?</span><span class="qb">Email anyone?</span><span class="qb">Judged how?</span>
+          </div>
+        </div>
+        <div data-step="1">
+          <span class="chip" style="background:rgba(24,165,107,.1);color:var(--green)">STRONGER BRIEF</span>
+          <div style="font-size:clamp(26px,2.6vw,42px);font-weight:600;line-height:1.5;margin-top:22px">“<span class="mk t" data-on="2">Produce this week's report</span> <span class="mk l" data-on="2">from the CRM export. Keep the existing template and don't email anyone.</span> <span class="mk d" data-on="2">It's finished when every figure matches the export.</span>”</div>
+          <div class="row" style="margin-top:34px;gap:12px" data-step="2">
+            <span class="chip" style="background:rgba(43,134,219,.12);color:var(--blue)">● TASK</span>
+            <span class="chip" style="background:rgba(217,154,0,.13);color:var(--amber)">● LIMITS</span>
+            <span class="chip" style="background:rgba(24,165,107,.12);color:var(--green)">● FINISH TEST</span>
+            <span class="muted" style="font-weight:600;margin-left:10px">…then let the AI decide <i>how</i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a class="source enter" href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank">Source <b>Claude prompting best practices</b></a>
+  </section>
+
+  <!-- 4 Reason -->
+  <section class="slide" data-id="reason" data-steps="4" data-auto="4" data-delay="900" data-title="Add the reason">
+    <div class="wrap">
+      <div class="enter eyebrow">Give reasons</div>
+      <h2 class="enter h2">Add the <span style="color:var(--purple)">why</span></h2>
+      <div class="enter card" style="margin-top:40px;padding:24px 32px">
+        <div class="tag">Your prompt</div>
+        <div class="big" style="margin-top:8px">Turn my notes into this morning's huddle update. <span data-step="1" style="display:inline-block;color:var(--purple);background:rgba(122,90,224,.09);border-radius:8px;padding:0 8px">It'll be read out loud to the team.</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr auto 1.5fr;gap:18px;margin-top:22px;align-items:stretch">
+        <div class="card" data-step="2" style="padding:22px 26px;background:#FAFBFD">
+          <div class="tag">My notes</div>
+          <div class="big mono" style="margin-top:8px;font-size:clamp(20px,1.8vw,27px)">New SKU live w/c 20/10, RRP £4.99</div>
+        </div>
+        <div data-step="3" style="align-self:center;font-size:30px;color:var(--muted)">→</div>
+        <div class="card" data-step="3" style="padding:22px 26px;border:2px solid rgba(122,90,224,.45)">
+          <div class="tag" style="color:var(--purple)">What comes back</div>
+          <div class="big" style="margin-top:8px">“From the week of the twentieth of October, our new product is live, priced at four pounds ninety-nine.”</div>
+        </div>
+      </div>
+      <div class="row" data-step="4" style="margin-top:22px;gap:10px;flex-wrap:wrap">
+        <span class="chip" style="background:rgba(122,90,224,.1);color:var(--purple);letter-spacing:.02em">SKU → product</span>
+        <span class="chip" style="background:rgba(122,90,224,.1);color:var(--purple);letter-spacing:.02em">w/c 20/10 → the twentieth of October</span>
+        <span class="chip" style="background:rgba(122,90,224,.1);color:var(--purple);letter-spacing:.02em">£4.99 → four pounds ninety-nine</span>
+        <span class="muted" style="font-weight:600;margin-left:8px">You never listed these rules. The reason covered them.</span>
+      </div>
+    </div>
+    <a class="source enter" href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank">Source <b>Claude prompting best practices</b></a>
+  </section>
+
+  <!-- 5 Testable -->
+  <section class="slide" data-id="test" data-steps="3" data-auto="2,3" data-delay="700" data-title="Make it testable">
+    <div class="wrap">
+      <div class="enter eyebrow">Define done</div>
+      <h2 class="enter h2">Make it <span style="color:var(--green)">testable</span></h2>
+      <div style="display:grid;grid-template-columns:2fr 3fr;gap:26px;margin-top:48px">
+        <div class="enter card" style="padding:32px;display:flex;flex-direction:column;justify-content:space-between;background:#FAFBFD">
+          <div><div class="tag">Weak</div><div class="big muted" style="margin-top:14px;text-decoration:line-through;text-decoration-color:var(--accent)">“Please double-check it.”</div></div>
+          <div class="muted" style="font-size:20px;margin-top:30px">Checked against <i>what?</i></div>
+        </div>
+        <div class="enter card" style="padding:32px;border:2px solid rgba(24,165,107,.4)">
+          <div class="tag" style="color:var(--green)">A real check</div>
+          <div style="display:flex;flex-direction:column;gap:22px;margin-top:22px">
+            <div class="row big" data-step="1" data-spark><span class="check">✓</span>Every figure matches the source</div>
+            <div class="row big" data-step="2" data-spark><span class="check">✓</span>Uses the approved template</div>
+            <div class="row big" data-step="3" data-spark><span class="check">✓</span>No unapproved actions</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a class="source enter" href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank">Source <b>Claude prompting best practices</b></a>
+  </section>
+
+  <!-- 6 Copilot path -->
+  <section class="slide" data-id="copilot" data-steps="4" data-auto="2,4" data-delay="1300" data-title="Skills in Copilot">
+    <div class="wrap">
+      <div class="row" style="justify-content:space-between;align-items:flex-end">
+        <div>
+          <div class="enter eyebrow">Prompt → skill</div>
+          <h2 class="enter h2">Save it as a <span class="accent">skill</span></h2>
+        </div>
+        <span class="enter label-ill">ILLUSTRATION · COPILOT CHAT</span>
+      </div>
+      <div class="enter crumbs">
+        <span class="crumb on">Copilot Chat</span><span class="crumb-sep">›</span>
+        <span class="crumb" data-on="1">New agent</span><span class="crumb-sep">›</span>
+        <span class="crumb" data-on="2">Configure</span><span class="crumb-sep">›</span>
+        <span class="crumb" data-on="3">Skills › Upload</span><span class="crumb-sep">›</span>
+        <span class="crumb" data-on="4" style="color:var(--green)">Done ✓</span>
+      </div>
+      <div class="enter card app stack" style="margin-top:16px">
+        <!-- chat home -->
+        <div class="screen" data-until="2">
+          <div class="side">
+            <div class="item newchat"><span class="ico" style="background:linear-gradient(135deg,#E2477A,#8E5BE8);border-radius:50%"></span>New chat</div>
+            <div class="head">Agents</div>
+            <div class="item"><span class="ico" style="background:#3BA0DD"></span>Sales</div>
+            <div class="item" data-on="1"><span class="ico" style="border:1.5px solid var(--ink);background:transparent"></span>New agent</div>
+            <div class="item muted"><span class="ico"></span>More agents</div>
+            <div class="head">Chats</div>
+            <div class="item muted" style="font-weight:500">rewrite this to make it…</div>
+          </div>
+          <div class="mainpane">
+            <div style="font-size:26px;font-weight:600">Hi, what can I help you with?</div>
+            <div class="msgbox">Message Copilot</div>
+            <div class="pills"><span>Refine writing</span><span>Draft content</span><span>Summarise</span></div>
+          </div>
+          <svg class="cursor" data-step="1" viewBox="0 0 24 24"><path d="M3 2l7 19 2.5-8L21 10z" fill="#18223D" stroke="#fff" stroke-width="1.5"/></svg>
+        </div>
+        <!-- agent builder -->
+        <div class="builder" data-step="2" style="position:relative">
+          <div class="left">
+            <div class="muted" style="font-weight:700;font-size:13px">Agent Builder › New agent</div>
+            <div style="font-size:24px;font-weight:700;margin-top:18px;line-height:1.2">Build your own specialist agent</div>
+            <div class="msgbox" style="width:100%;margin-top:18px">Message Agent Builder</div>
+          </div>
+          <div class="right">
+            <div class="row" style="justify-content:space-between"><div class="seg"><span class="sel">Configure</span><span>Preview</span></div><span class="muted" style="font-size:13px">Create</span></div>
+            <div class="row" style="gap:14px"><span style="width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#C35BE0,#7A5AE0)"></span><div><div style="font-size:22px;font-weight:700">Prompt Coach</div><div class="muted" style="font-size:13px">Helps the team write clearer prompts</div></div></div>
+            <div class="box"><div class="bt">Instructions</div><div class="muted" style="font-size:13px;line-height:1.5">Describe what this agent should do, its tone, and any rules it must follow…</div></div>
+            <div class="box"><div class="bt">Skills <span class="addbtn" data-on="3">+ Add</span></div>
+              <div class="stack">
+                <div class="muted" style="font-size:13px;text-align:center;padding:10px;border:1.5px dashed var(--line);border-radius:8px" data-until="4">Add skills to specialise this agent</div>
+                <div class="skillrow" data-step="4" data-spark><span>📄</span>imp <span class="muted" style="font-weight:500">· SKILL.md</span><span style="margin-left:auto;color:var(--green)">✓</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-veil" data-step="3" data-until="4">
+            <div class="modal">
+              <div style="font-size:20px;font-weight:700">Upload skill</div>
+              <div class="drop"><span class="file mono">📄 imp/SKILL.md</span></div>
+              <div style="font-size:12.5px;margin-top:12px;line-height:1.6"><b>File requirements</b><br>• A SKILL.md file, or a .zip containing one<br>• SKILL.md must include a name and description in YAML</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 SKILL.md anatomy -->
+  <section class="slide" data-id="skillmd" data-steps="4" data-auto="2" data-delay="1500" data-title="Inside a SKILL.md">
+    <div class="wrap" style="display:grid;grid-template-columns:1.25fr 1fr;gap:44px;align-items:center">
+      <div>
+        <div class="enter eyebrow">Inside a skill</div>
+        <h2 class="enter h2" style="margin-bottom:26px">One file. <span class="accent">Many tools.</span></h2>
+        <div class="enter card editor">
+          <div class="bar"><i></i><i></i><i></i><span class="mono" style="margin-left:8px">imp/SKILL.md</span></div>
+          <div class="code mono">
+            <div class="ln c">---</div>
+            <div class="ln" data-hl="1"><span class="k">name:</span> imp</div>
+            <div data-hl="2"><div class="ln"><span class="k">description:</span> Rewrites rambling, voice-dictated</div><div class="ln">  prompts into clear ones. Use when someone asks</div><div class="ln">  to improve or clean up a prompt.</div></div>
+            <div class="ln c">---</div>
+            <div data-hl="3"><div class="ln h"># Improving dictated prompts</div><div class="ln">1. Read the dictation for intent.</div><div class="ln">2. Ask up to 3 questions, each with a suggested answer.</div><div class="ln">3. Return only the rewritten prompt.</div></div>
+            <div data-hl="4"><div class="ln h">## Examples</div><div class="ln c">Before: "ok so um I need a welcome message for the new…"</div><div class="ln c">After:  "Write a short, friendly welcome email for…"</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="stack">
+          <div class="enter" data-until="1">
+            <div class="row" style="gap:14px;flex-wrap:wrap">
+              <span class="chip card" style="font-size:16px;letter-spacing:.02em;padding:14px 22px">Copilot agents</span>
+              <span class="chip card" style="font-size:16px;letter-spacing:.02em;padding:14px 22px">Claude</span>
+              <span class="chip card" style="font-size:16px;letter-spacing:.02em;padding:14px 22px;color:var(--muted)">+ other AI tools</span>
+            </div>
+            <div class="sub" style="margin-top:18px">Write it once. Use it wherever you work.</div>
+          </div>
+          <div class="card callout" data-step="1" data-until="2"><div class="tag">Name</div><div class="big" style="margin-top:8px">Short and obvious</div></div>
+          <div class="card callout" data-step="2" data-until="3"><div class="tag accent">Description = the trigger</div><div class="big" style="margin-top:8px">What it does<br>+ <span class="accent">when</span> to use it</div></div>
+          <div class="card callout" data-step="3" data-until="4"><div class="tag">Instructions</div><div class="big" style="margin-top:8px">Short. Only what changes the result.</div></div>
+          <div class="card callout" data-step="4"><div class="tag">Examples</div><div class="big" style="margin-top:8px">Real before-and-afters beat rules.</div></div>
+        </div>
+      </div>
+    </div>
+    <a class="source enter" href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Source <b>Claude skill authoring best practices</b></a>
+  </section>
+
+  <!-- 8 How to write one -->
+  <section class="slide" data-id="write" data-steps="5" data-auto="2,3,4,5" data-delay="900" data-title="Writing a skill">
+    <div class="wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
+      <div>
+        <div class="enter eyebrow">How to write one</div>
+        <h2 class="enter h2">Write a skill that <span class="accent">works</span></h2>
+        <div class="enter card" style="margin-top:36px;padding:26px 30px;display:flex;flex-direction:column;gap:14px;border-left:6px solid var(--accent)">
+          <div class="row" data-step="1" style="gap:14px;font-size:clamp(17px,1.45vw,21px)"><b class="accent mono">01</b><span><b>Spot what goes wrong</b> <span class="muted">· try the task with no skill first</span></span></div>
+          <div class="row" data-step="2" style="gap:14px;font-size:clamp(17px,1.45vw,21px)"><b class="accent mono">02</b><span><b>Write only the fix</b> <span class="muted">· short, just what changes the result</span></span></div>
+          <div class="row" data-step="3" style="gap:14px;font-size:clamp(17px,1.45vw,21px)"><b class="accent mono">03</b><span><b>What + when</b> <span class="muted">· the description is the trigger</span></span></div>
+          <div class="row" data-step="4" style="gap:14px;font-size:clamp(17px,1.45vw,21px)"><b class="accent mono">04</b><span><b>Add 2 examples</b> <span class="muted">· a real before and after</span></span></div>
+          <div class="row" data-step="5" style="gap:14px;font-size:clamp(17px,1.45vw,21px)"><b class="accent mono">05</b><span><b>Test with vs without</b> <span class="muted">· keep it only if it's better</span></span></div>
+        </div>
+      </div>
+      <div class="enter" style="display:flex;justify-content:center">
+        <div class="orbit" id="ring">
+          <svg viewBox="0 0 400 400"><circle cx="200" cy="200" r="150" fill="none" stroke="#E3E8F0" stroke-width="4"/>
+            <circle class="arc" id="arc" cx="200" cy="200" r="150" fill="none" style="stroke:var(--accent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="942.5" stroke-dashoffset="942.5"/></svg>
+          <div style="position:absolute;inset:0;display:grid;place-items:center;text-align:center"><div><div style="font-size:52px;font-weight:800;color:var(--primary)" id="ringNum">0/5</div><div class="tag">steps</div></div></div>
+        </div>
+      </div>
+    </div>
+    <a class="source enter" href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank">Source <b>Claude skill authoring best practices</b></a>
+  </section>
+
+  <!-- 9 imp demo -->
+  <section class="slide" data-id="imp" data-steps="3" data-auto="3" data-delay="900" data-title="Demo: imp">
+    <div class="wrap">
+      <div class="row" style="justify-content:space-between;align-items:flex-end">
+        <div>
+          <div class="enter eyebrow">Live demo</div>
+          <h2 class="enter h2"><span class="mono accent">imp</span> · the prompt improver</h2>
+        </div>
+        <div data-step="3"><span class="live"><span class="dot"></span>LIVE DEMO</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:16px;margin-top:40px;align-items:stretch">
+        <div class="enter card pipe">
+          <div class="tag">1 · In</div><div style="font-size:21px;font-weight:700;margin-top:4px">Rambling voice note</div>
+          <div class="mono muted" style="font-size:15px;line-height:1.6;margin-top:14px" id="ramble"></div>
+        </div>
+        <div data-step="1" style="align-self:center;font-size:30px;color:var(--muted)">→</div>
+        <div class="card pipe" data-step="1">
+          <div class="tag">2 · Asks</div><div style="font-size:21px;font-weight:700;margin-top:4px">3 quick questions</div>
+          <div style="display:flex;flex-direction:column;gap:14px;margin-top:14px;font-size:15px">
+            <div><div class="muted">How is it sent?</div><div class="row" style="gap:8px;margin-top:3px">Email <span class="rec">SUGGESTED</span></div></div>
+            <div><div class="muted">Tone?</div><div class="row" style="gap:8px;margin-top:3px">Friendly, plain <span class="rec">SUGGESTED</span></div></div>
+            <div><div class="muted">Done when?</div><div class="row" style="gap:8px;margin-top:3px">Start time correct <span class="rec">SUGGESTED</span></div></div>
+          </div>
+          <div style="margin-top:auto;padding-top:14px;font-weight:700">You: “yes, yes, yes”</div>
+        </div>
+        <div data-step="2" style="align-self:center;font-size:30px;color:var(--muted)">→</div>
+        <div class="card pipe" data-step="2" data-spark style="border:2px solid rgba(24,165,107,.45)">
+          <div class="tag" style="color:var(--green)">3 · Out</div><div style="font-size:21px;font-weight:700;margin-top:4px">Clean prompt</div>
+          <div class="mono" style="font-size:15px;line-height:1.6;margin-top:14px">Write a short, friendly welcome email for a new warehouse starter joining on Monday. Include the 7am start and what to bring on day one. Don't mention parking, as that's changing. Finished when it's under 150 words and the start time is correct.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 Close -->
+  <section class="slide" data-id="close" data-title="Questions" data-steps="1" data-auto="1" data-delay="900">
+    <div class="wrap" style="text-align:center">
+      <div class="enter eyebrow">Try it this week</div>
+      <div class="enter row" style="justify-content:center;margin-top:26px;flex-wrap:wrap;gap:14px;font-size:21px;font-weight:700">
+        <span class="card" style="padding:16px 24px">Pick a task you repeat</span><span class="muted">→</span>
+        <span class="card" style="padding:16px 24px">Write the brief</span><span class="muted">→</span>
+        <span class="card" style="padding:16px 24px;border:2px solid var(--accent)">Save it as a skill</span>
+      </div>
+      <div class="enter row" style="justify-content:center;margin-top:44px;gap:10px;flex-wrap:wrap">
+        <span class="chip" style="background:rgba(43,134,219,.12);color:var(--blue)">TASK</span><b class="muted">+</b>
+        <span class="chip" style="background:rgba(217,154,0,.13);color:var(--amber)">LIMITS</span><b class="muted">+</b>
+        <span class="chip" style="background:rgba(122,90,224,.12);color:var(--purple)">REASON</span><b class="muted">+</b>
+        <span class="chip" style="background:rgba(24,165,107,.12);color:var(--green)">FINISH TEST</span>
+      </div>
+      <h1 class="h1" style="margin-top:60px" data-step="1" data-spark>Questions<span class="accent">?</span></h1>
+    </div>
+  </section>
+</main>
+
+<div id="progress"></div>
+<footer class="bottombar">
+  <div class="meta">Event name | Date</div>
+  <div class="row" style="gap:0"><div class="dots" id="dots"></div><div class="pips" id="pips"></div></div>
+  <div class="navs">
+    <span class="counter" id="counter">01 / 10</span>
+    <button class="navbtn" id="prevBtn" aria-label="Previous">←</button>
+    <button class="navbtn" id="nextBtn" aria-label="Next">→</button>
+  </div>
+</footer>
+<canvas id="fx"></canvas>
+<div id="blank"></div>
+
+<script>
+(() => {
+  const slides = [...document.querySelectorAll('.slide')];
+  const EASE = 'cubic-bezier(.2,.8,.2,1)';
+  let cur = 0, step = 0;
+  const maxSteps = s => +s.dataset.steps || 0;
+
+  // ---------- sparkle bursts ----------
+  const fx = document.getElementById('fx'), ctx = fx.getContext('2d');
+  let parts = [], running = false;
+  function sizeFx() { const r = devicePixelRatio || 1; fx.width = innerWidth * r; fx.height = innerHeight * r; ctx.setTransform(r, 0, 0, r, 0, 0); }
+  addEventListener('resize', sizeFx); sizeFx();
+  const css = getComputedStyle(document.documentElement);
+  const COLS = ['--accent', '--primary', '--blue', '--amber', '--green'].map(v => css.getPropertyValue(v).trim());
+  function burst(x, y, n = 36) {
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2, v = 2 + Math.random() * 5;
+      parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 2, life: 1, s: 3 + Math.random() * 4, c: COLS[i % COLS.length], star: Math.random() < .35, r: Math.random() * 6 });
+    }
+    if (!running) { running = true; requestAnimationFrame(tick); }
+  }
+  function tick() {
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    parts = parts.filter(p => p.life > 0);
+    for (const p of parts) {
+      p.x += p.vx; p.y += p.vy; p.vy += .14; p.vx *= .98; p.life -= .018; p.r += .1;
+      ctx.globalAlpha = Math.max(p.life, 0); ctx.fillStyle = p.c;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r);
+      if (p.star) { ctx.beginPath(); for (let k = 0; k < 8; k++) { const rr = k % 2 ? p.s * .4 : p.s * 1.3; ctx.lineTo(Math.cos(k * Math.PI / 4) * rr, Math.sin(k * Math.PI / 4) * rr); } ctx.fill(); }
+      else ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2);
+      ctx.restore();
+    }
+    ctx.globalAlpha = 1;
+    if (parts.length) requestAnimationFrame(tick); else { running = false; ctx.clearRect(0, 0, innerWidth, innerHeight); }
+  }
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function sparkle(el) {
+    if (reduced) return;
+    setTimeout(() => { const b = el.getBoundingClientRect(); burst(b.left + Math.min(b.width, 60) / 2 + (el.querySelector('.check') ? 0 : b.width / 2 - 30), b.top + b.height / 2); }, 320);
+  }
+
+  // ---------- skill-writing ring ----------
+  const ringItems = [
+    ['Spot what goes wrong', 'Try the task with no skill first.'],
+    ['Write only the fix', 'Short, just what changes the result.'],
+    ['What + when', 'The description is the trigger.'],
+    ['Add 2 examples', 'A real before and after.'],
+    ['Test with vs without', 'Keep it only if it\'s better.'],
+  ];
+  const ring = document.getElementById('ring');
+  ringItems.forEach(([t], i) => {
+    const a = (-90 + i * 72) * Math.PI / 180, el = document.createElement('div');
+    el.className = 'node'; el.dataset.on = i + 1; el.dataset.hl = i + 1;
+    el.style.left = (50 + 37.5 * Math.cos(a)) + '%'; el.style.top = (50 + 37.5 * Math.sin(a)) + '%';
+    el.innerHTML = `<span class="n">0${i + 1}</span>${t}`;
+    ring.appendChild(el);
+  });
+
+  // ---------- imp typing ----------
+  const ramble = "ok so um I need a welcome message for the new starter in the warehouse on monday… keep it friendly, not too long, oh and don't mention the parking thing cos that's changing, um and make sure the start time's right, it's 7am";
+  const rambleEl = document.getElementById('ramble');
+  let typer;
+  function typeRamble(n, forward) {
+    clearInterval(typer);
+    if (n > 0 || !forward) { rambleEl.textContent = ramble; return; }
+    let i = 0;
+    rambleEl.innerHTML = '<span class="caret"></span>';
+    typer = setInterval(() => {
+      i += 2; rambleEl.innerHTML = ramble.slice(0, i) + '<span class="caret"></span>';
+      if (i >= ramble.length) clearInterval(typer);
+    }, 26);
+  }
+
+  const hooks = {
+    write(s, n) {
+      document.getElementById('arc').style.strokeDashoffset = 942.5 * (1 - n / 5);
+      document.getElementById('ringNum').textContent = n + '/5';
+    },
+  };
+
+  // ---------- builds ----------
+  function applySteps(s, n, prevN = -1) {
+    s.querySelectorAll('[data-step]').forEach(el => el.classList.toggle('shown', n >= +el.dataset.step));
+    s.querySelectorAll('[data-until]').forEach(el => el.classList.toggle('off', n >= +el.dataset.until));
+    s.querySelectorAll('[data-on]').forEach(el => el.classList.toggle('on', n >= +el.dataset.on));
+    s.querySelectorAll('[data-hl]').forEach(el => el.classList.toggle('hl', n === +el.dataset.hl));
+    s.classList.toggle('hlmode', !!s.querySelector(`[data-hl="${n}"]`));
+    if (n === prevN + 1 && n > 0) s.querySelectorAll(`[data-spark][data-step="${n}"]`).forEach(sparkle);
+    hooks[s.dataset.id]?.(s, n);
+    renderChrome();
+  }
+
+  // Steps listed in data-auto play by themselves after the previous step,
+  // so one click can run a whole sequence. Steps not listed wait for a click.
+  const autoSteps = s => (s.dataset.auto || '').split(',').filter(Boolean).map(Number);
+  const clickSteps = s => Array.from({ length: maxSteps(s) }, (_, i) => i + 1).filter(n => !autoSteps(s).includes(n));
+  let autoTimer = null;
+  function clearAuto() { clearTimeout(autoTimer); autoTimer = null; }
+  function scheduleAuto(entering = false) {
+    clearAuto();
+    const s = slides[cur];
+    if (!autoSteps(s).includes(step + 1)) return;
+    autoTimer = setTimeout(() => { autoTimer = null; setStep(step + 1, true); }, (+s.dataset.delay || 800) + (entering ? 900 : 0));
+  }
+  function setStep(n, forward) {
+    const s = slides[cur], p = step;
+    step = n;
+    applySteps(s, n, forward ? p : -1);
+    if (s.dataset.id === 'imp') typeRamble(n, forward);
+    if (forward) scheduleAuto(); else clearAuto();
+  }
+
+  // ---------- chrome ----------
+  const dots = document.getElementById('dots'), pips = document.getElementById('pips');
+  slides.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.className = 'dot-btn'; b.title = s.dataset.title || ''; b.onclick = () => go(i);
+    dots.appendChild(b);
+  });
+  function renderChrome() {
+    [...dots.children].forEach((d, i) => d.classList.toggle('cur', i === cur));
+    pips.innerHTML = clickSteps(slides[cur]).map(c => `<span class="pip ${step >= c ? 'done' : ''}"></span>`).join('');
+    document.getElementById('counter').textContent = String(cur + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+    const total = slides.reduce((a, s) => a + maxSteps(s) + 1, 0);
+    const done = slides.slice(0, cur).reduce((a, s) => a + maxSteps(s) + 1, 0) + step + 1;
+    document.getElementById('progress').style.width = (done / total * 100) + '%';
+  }
+
+  // ---------- transitions (Web Animations API, no libraries) ----------
+  function show(to, from, dir) {
+    slides.forEach(s => { s.getAnimations().forEach(a => a.cancel()); if (s !== to && s !== from) s.classList.remove('active'); });
+    to.classList.add('active');
+    if (reduced) { if (from) from.classList.remove('active'); return; }
+    if (from) {
+      const out = from.animate([{ opacity: 1, transform: 'none', filter: 'blur(0)' }, { opacity: 0, transform: `translateX(${-70 * dir}px) scale(.98)`, filter: 'blur(6px)' }],
+        { duration: 360, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' });
+      out.onfinish = () => { from.classList.remove('active'); out.cancel(); };
+    }
+    to.animate([{ opacity: 0, transform: `translateX(${70 * dir}px) scale(1.01)`, filter: 'blur(6px)' }, { opacity: 1, transform: 'none', filter: 'blur(0)' }],
+      { duration: 620, delay: from ? 240 : 0, easing: EASE, fill: 'backwards' });
+    to.querySelectorAll('.enter').forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(28px)' }, { opacity: 1, transform: 'none' }],
+      { duration: 650, delay: (from ? 360 : 80) + i * 70, easing: EASE, fill: 'backwards' }));
+  }
+
+  function go(i, atEnd = false) {
+    if (i < 0 || i >= slides.length || i === cur) return;
+    clearAuto();
+    const from = slides[cur], dir = i > cur ? 1 : -1;
+    cur = i; step = atEnd ? maxSteps(slides[i]) : 0;
+    applySteps(slides[i], step);
+    if (slides[i].dataset.id === 'imp') typeRamble(step, !atEnd);
+    show(slides[i], from, dir);
+    if (!atEnd) scheduleAuto(true);
+    try { history.replaceState(null, '', '#' + (i + 1)); } catch (e) {}
+  }
+  function next() {
+    const s = slides[cur], auto = autoSteps(s);
+    if (autoTimer) {
+      // a sequence is still playing: finish it now rather than skipping ahead
+      clearAuto();
+      while (auto.includes(step + 1)) setStep(step + 1, true);
+      clearAuto();
+      return;
+    }
+    if (step < maxSteps(s)) setStep(step + 1, true);
+    else go(cur + 1);
+  }
+  function prev() {
+    const s = slides[cur], auto = autoSteps(s);
+    clearAuto();
+    // undo the whole last click, including anything it played automatically
+    let n = step;
+    while (n > 0 && auto.includes(n)) n--;
+    n--;
+    if (n < 0) go(cur - 1, true);
+    else setStep(n, false);
+  }
+
+  document.getElementById('nextBtn').onclick = e => { next(); e.currentTarget.blur(); };
+  document.getElementById('prevBtn').onclick = e => { prev(); e.currentTarget.blur(); };
+  document.addEventListener('keydown', e => {
+    const k = e.key;
+    if (['ArrowRight', 'ArrowDown', ' ', 'PageDown', 'Enter'].includes(k)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(k)) { e.preventDefault(); prev(); }
+    else if (k === 'Home') go(0);
+    else if (k === 'End') go(slides.length - 1, true);
+    else if (k === 'f' || k === 'F') document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+    else if (k === 'b' || k === 'B' || k === '.') document.getElementById('blank').classList.toggle('on');
+  });
+  document.querySelectorAll('.habit').forEach(h => h.addEventListener('click', e => { e.currentTarget.classList.toggle('on'); e.currentTarget.blur(); }));
+
+  // ---------- start ----------
+  cur = Math.min(Math.max((parseInt(location.hash.slice(1)) || 1) - 1, 0), slides.length - 1);
+  applySteps(slides[cur], 0);
+  if (slides[cur].dataset.id === 'imp') typeRamble(0, true);
+  show(slides[cur], null, 1);
+  scheduleAuto(true);
+})();
+</script>
+</body>
+</html>

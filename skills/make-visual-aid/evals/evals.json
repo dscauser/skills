@@ -1,0 +1,45 @@
+{
+  "skill_name": "make-visual-aid",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I've got 15 minutes at our team meeting on Friday to talk about the new expenses process. Here are my notes: submit within 30 days, photo of the receipt in the app, manager approves, finance pays on the 25th, common mistakes are missing receipts and wrong cost codes. Can you make me something visual to click through while I talk? I'll be sharing my screen in Teams.",
+      "expected_output": "Asks up to 3 numbered questions with a recommended answer each, including a short slide plan table with click counts, then builds a single light-theme HTML file from the template with about 5-7 slides, one idea and one moving visual per slide, everyday examples, grouped clicks, no external scripts, and checks it in a browser.",
+      "files": [],
+      "expectations": [
+        "Asks no more than 3 numbered questions, each with options and a 'Recommend' line, before building",
+        "Proposes a slide plan with the number of clicks per slide",
+        "Produces one HTML file with no external script, font or image URLs",
+        "Uses a light background and no constant background animation",
+        "Keeps on-screen text short (headline plus a few words per slide)",
+        "Uses data-auto to group related steps so the whole talk needs far fewer clicks than build steps",
+        "Clicks through the finished file in a browser, or says it could not"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Use my company theme and turn these slide screenshots into an interactive HTML visual aid for my demo slot tomorrow. [3 slide screenshots attached] Most of the audience are non-managers from HR, merchandising and marketing.",
+      "expected_output": "Reads the context file for brand colours and audience notes, samples colours from the screenshots where helpful, asks at most 3 questions, and builds a themed file whose examples fit non-managers, with a demo-intro slide and a closing slide.",
+      "files": [],
+      "expectations": [
+        "Looks for visual-aid-context.md in the workspace and context.md next to SKILL.md before asking about the theme",
+        "Applies the theme by changing only the :root variables and the wordmark/footer text",
+        "Picks examples from everyday work for non-managers, not executive scenarios",
+        "Includes a slide that introduces the live demo",
+        "Does not add the presenter's job title unless asked"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Just did a practice run of the visual aid. Slide 4's before text changes before I finish reading it, the ticks from slide 5 hang around when slide 6 comes in, and the little numbers in the labels don't match the counter at the bottom.",
+      "expected_output": "Fixes all three in the existing file: keeps the before text visible and brings the after in beside it on its own click, replaces any transition:all with explicit properties so nothing lingers, removes the section numbers from labels, then re-checks those slides in a browser.",
+      "files": [],
+      "expectations": [
+        "Shows before and after side by side instead of swapping text in place, with a separate click for the after",
+        "Finds and replaces transition: all on elements inside slides with an explicit property list",
+        "Removes the numbers from the eyebrow labels rather than renumbering the counter",
+        "Re-checks the changed slides in a browser after fixing"
+      ]
+    }
+  ]
+}
