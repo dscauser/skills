@@ -1,6 +1,6 @@
 ---
 name: explore-idea
-description: Explores a raw idea before anyone commits to it, as a short back-and-forth with an honest sparring partner. Pins down what the user actually means, sharpens the idea, widens it with alternatives the user had not considered, pushes back, trims it to the smallest version worth trying, and ends with a one-page brief plus optional extras (Mermaid mind map, 1-5 slide HTML visual, short HTML animation). Has branches for software (build), business and customer ideas (commercial, marketing, UX, merchandising), people and HR ideas, personal everyday ideas, and an open catch-all. Use when the user says "I have an idea", "what do you think of this idea", "help me think this through", "explore this idea", "brainstorm", "sanity-check this", "is this worth doing", "bounce an idea off you", "pre-ideate", or describes something they are thinking of doing at work or at home and wants a second opinion, even if they do not name the skill.
+description: Explores a raw idea before anyone commits to it, as a short back-and-forth with an honest sparring partner. Pins down what the user actually means, sharpens the idea, widens it with alternatives the user had not considered, pushes back, trims it to the smallest version worth trying, and ends with a one-page brief plus optional extras (Mermaid mind map, 1-5 slide HTML visual, short HTML animation, designed PDF of the brief). Has branches for software (build), business and customer ideas (commercial, marketing, UX, merchandising), people and HR ideas, personal everyday ideas, and an open catch-all. Use when the user says "I have an idea", "what do you think of this idea", "help me think this through", "explore this idea", "brainstorm", "sanity-check this", "is this worth doing", "bounce an idea off you", "pre-ideate", or describes something they are thinking of doing at work or at home and wants a second opinion, even if they do not name the skill.
 ---
 
 # Explore Idea
@@ -122,6 +122,9 @@ At wrap-up, write the brief, then offer the extras as a short menu:
 - **Animation** (optional): one self-contained HTML file, a 10-20 second
   animated explainer. If a HyperFrames skill is installed, offer to render it
   to MP4 as well.
+- **PDF** (optional): the brief as a designed one- or two-page PDF to send to
+  people who were not in the conversation. Made with the `print-html-to-pdf`
+  skill if it is installed.
 
 Read [references/deliverables.md](references/deliverables.md) before producing
 any of them. Where files go: an `ideas/<short-slug>/` folder in the user's

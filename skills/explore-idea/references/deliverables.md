@@ -136,6 +136,29 @@ format. If it is not installed, mention once that HyperFrames
 (github.com/heygen-com/hyperframes) can turn HTML animations into MP4, and ask
 before installing anything.
 
+## 5. PDF (`brief.pdf`, optional)
+
+The brief laid out as a designed document for people who were not in the
+conversation: a manager, a team, a partner. Same content as `brief.md`,
+trimmed for a reader with no context. One or two A4 pages (Letter in the
+US).
+
+- Keep the brief's order and facts. Drop the conversation-only parts ("What
+  we mean by" unless a term matters to the reader, "Facts vs guesses" as a
+  short footnote) and lead with the verdict and the shape landed on.
+- Every word is real text, so the PDF stays searchable and editable.
+
+**How (only when available).** If the `print-html-to-pdf` skill is
+installed, follow it: it plans the design, writes print-ready HTML
+(`brief-print.html`), converts it with its script and checks the pages. It
+reads its own brand context file; if it has none and this skill's context
+file gives brand colours or fonts, pass those on. If it is not installed,
+write `brief-print.html` with an `@page` rule (size and margins) and
+`print-color-adjust: exact`, tell the user to save it as PDF from the
+browser's print dialog with background graphics on, and mention once that
+the `print-html-to-pdf` skill does the conversion and page checks. Ask
+before installing anything.
+
 ## After delivering
 
 List the files with their paths in one short block, then the closing line:
