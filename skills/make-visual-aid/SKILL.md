@@ -1,6 +1,6 @@
 ---
 name: make-visual-aid
-description: Turns talk notes, bullet points or an existing deck into a single-file, click-through HTML visual aid for a live talk or screenshare, with lean text, one moving visual per slide, click-grouped animations and an optional company theme. Asks up to 3 numbered questions, each with a recommended answer, then builds and checks the file. Use when the user asks for a visual aid, presentation aid, talk slides in HTML, something to click through while presenting or demoing, or to turn notes or slides into an interactive or animated presentation, even if they do not name the skill.
+description: Turns talk notes, bullet points or an existing deck into a single-file HTML visual aid for a live talk or screenshare, either click-through slides (lean text, one moving visual per slide, click-grouped animations) or a one-page scrolling summary to talk around in a meeting (system diagram, phases, options, questions, mind map, light/dark toggle), with an optional company theme. Asks up to 3 numbered questions, each with a recommended answer, then builds and checks the file. Use when the user asks for a visual aid, presentation aid, talk slides in HTML, something to click through or scroll while presenting, a one-page visual summary for a meeting, or to turn notes, a report or slides into an interactive or animated presentation, even if they do not name the skill.
 ---
 
 # Making a visual aid
@@ -10,6 +10,20 @@ The presenter speaks; each slide shows a few words and one visual that builds
 as they click. Everything here comes from rehearsing real talks: follow the
 rules in [references/design-rules.md](references/design-rules.md) closely,
 because each one fixes a problem a presenter hit.
+
+## Two formats
+
+- **Slides** (default for a talk): click-through, one idea per slide. Template
+  [assets/template.html](assets/template.html), patterns in
+  [references/build-patterns.md](references/build-patterns.md).
+- **One page** (for a meeting or discussion around a proposal or system): a
+  scrolling page with a system diagram as the centrepiece, then phases, a
+  scale bar, options, questions and risks as chips, and a mind map. Template
+  [assets/one-page-template.html](assets/one-page-template.html), rules in
+  [references/one-page.md](references/one-page.md).
+
+If a longer report or brief exists, the one page is its visual summary: same
+names, numbers and order, no paragraphs.
 
 ## Workflow
 
@@ -35,8 +49,11 @@ because each one fixes a problem a presenter hit.
       → Recommend A: [one-line reason]
    ```
 
-   Good questions: the slide plan (show it as a short table: slide, its one
-   idea, clicks), theme (context file or neutral, recommend the context file
+   Good questions: the format, when the request does not make it clear
+   (recommend slides for a talk with a running order, one page for a meeting
+   that discusses one proposal or system); the slide plan (show it as a short
+   table: slide, its one idea, clicks) or, for one page, the sections to keep
+   and the diagram's boxes; theme (context file or neutral, recommend the context file
    when one exists), whether it will be shared afterwards (if yes, each slide
    needs one line that stands without the speaker). End with: Reply like
    `1B, 2A`, add notes, or say yes to take all recommendations.
@@ -51,16 +68,22 @@ because each one fixes a problem a presenter hit.
    wording, examples or mock-ups from earlier talks. Set the theme in
    `:root` and the wordmark/footer text only. Pattern catalogue and build
    attributes: [references/build-patterns.md](references/build-patterns.md).
+   For one page, copy [assets/one-page-template.html](assets/one-page-template.html)
+   instead, rename every box for the topic, delete unused sections and follow
+   [references/one-page.md](references/one-page.md).
 
 5. **Check it in a browser** if one is available. Click through every slide
    in order, then backwards. Confirm: no console errors, every slide reaches
    its full state, nothing from the previous slide lingers into the next,
    auto sequences finish, and text fits at 1920×1080 and at 1366×768. Read
-   state from the DOM when screenshots lag.
+   state from the DOM when screenshots lag. For one page: scroll it in light
+   and dark, at 1366 and about 400 wide, and confirm nothing overlaps and
+   nothing scrolls sideways.
 
 6. **Deliver** the file path, the click count per slide, and the keys (→,
    Space or clicker to advance; ← to undo the last click; F fullscreen;
-   B blank screen; dots jump to a slide). Say what was not checked.
+   B blank screen; dots jump to a slide). For one page, list the sections and
+   point out the light/dark button. Say what was not checked.
 
 ## Revising after a rehearsal
 

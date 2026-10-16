@@ -41,6 +41,20 @@
         "Removes the numbers from the eyebrow labels rather than renumbering the counter",
         "Re-checks the changed slides in a browser after fixing"
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "I'm meeting our head of operations tomorrow to talk through a proposed booking system: requests come in from the website, email and phone, get checked and de-duplicated, land in one shared calendar, and staff, managers and a reporting dashboard read from it. There are three ways we could roll it out and a few open questions. I don't want slides, just one page I can scroll on Teams while we talk. Keep it visual, no walls of text.",
+      "expected_output": "Picks the one-page format, asks at most 3 questions with recommendations, then builds a single light-theme scrolling page from the one-page template: a system diagram with the inputs, check step, shared calendar and users renamed for the topic, phases, the rollout options with one suggested, questions and risks as short chips, a small mind map, and a working light/dark toggle, with no paragraphs and no external dependencies.",
+      "files": [],
+      "expectations": [
+        "Uses assets/one-page-template.html rather than the slide template",
+        "Renames every diagram box for the booking system and leaves no template placeholder text",
+        "Has no paragraphs: labels and one-line details only",
+        "Keeps the light/dark toggle and defaults to light",
+        "Produces one HTML file with no external script, font or image URLs",
+        "Checks the page at 1366 and about 400 wide in both themes, or says it could not"
+      ]
     }
   ]
 }

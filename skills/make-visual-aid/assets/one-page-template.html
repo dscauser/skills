@@ -1,0 +1,303 @@
+<!doctype html>
+<!--
+  One-page visual aid template: a scrolling page to talk around in a meeting.
+  Copy it, keep the sections the discussion needs, delete the rest, replace every placeholder.
+  Theme: edit the :root variables only (--primary, --accent, --bg, tints, fonts).
+  Light is the default (screenshare). The button bottom-right switches to dark; dark values live in [data-theme="dark"].
+  No external scripts, fonts or images. See references/one-page.md for the rules.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Proposal Name</title>
+<style>
+  :root{
+    --bg:#F3F6F7; --card:#FFFFFF; --sunk:#E7EDEF; --ink:#13212A; --muted:#5A6B74; --line:#D3DDE1;
+    --primary:#13212A; --accent:#0C6B70; --accent-soft:#DCEFEF; --on-accent:#FFFFFF;
+    --tint-good:#E2F0DC; --good:#2F6B2A; --tint-warn:#FBEFD9; --warn:#9A5A00;
+    --font:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,sans-serif;
+    --font-display:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,sans-serif;
+    --mono:"Cascadia Code",Consolas,ui-monospace,monospace;
+    color-scheme:light;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1519; --card:#152027; --sunk:#1B2830; --ink:#E4EBEE; --muted:#93A4AD; --line:#2A3943;
+    --primary:#E4EBEE; --accent:#53B9BE; --accent-soft:#163A3D; --on-accent:#0E1519;
+    --tint-good:#1F3420; --good:#8FCC84; --tint-warn:#3A2C14; --warn:#E5A54A;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--font-display);color:var(--primary);line-height:1.1;text-wrap:balance;margin:0}
+  main{max-width:1180px;margin:0 auto;padding:48px 16px 96px;display:flex;flex-direction:column;gap:56px}
+  .label{font:500 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .muted{color:var(--muted)}
+  .small{font-size:12px;color:var(--muted)}
+  .h2{font-size:24px;font-weight:700;margin-bottom:16px}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .box b{display:block;font-family:var(--font-display);font-weight:600}
+  .dashed{border:1px dashed var(--line);border-radius:10px;padding:12px}
+  .col{display:flex;flex-direction:column;gap:8px;min-width:0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+  .chip{padding:4px 12px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:13px}
+  .chip.hot{background:var(--tint-warn);border-color:transparent;font-weight:600}
+  ul,ol{margin:0;padding:0;list-style:none}
+
+  /* header */
+  .title{font-size:clamp(36px,6vw,60px);font-weight:700;letter-spacing:-.02em;margin-top:12px}
+  .question{font:500 clamp(20px,2.4vw,26px)/1.3 var(--font-display);color:var(--muted);margin-top:10px}
+
+  /* system diagram: inputs -> [boundary [host: step -> core -> outputs]] -> users */
+  .diagram{display:grid;gap:12px;align-items:center}
+  .boundary{border:2px dashed var(--line);border-radius:14px;padding:14px;min-width:0}
+  .boundary-grid{display:grid;gap:12px;align-items:center}
+  .host{background:var(--sunk);border-radius:10px;padding:14px;min-width:0}
+  .host-grid{display:grid;gap:12px;align-items:center}
+  .core{background:var(--card);border:2px solid var(--accent);border-radius:10px;padding:16px;min-width:0}
+  .core-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+  .core-head b{font:700 20px/1.1 var(--font-display)}
+  .badge{font:500 12px var(--mono);padding:2px 8px;border-radius:4px;background:var(--accent-soft);color:var(--accent)}
+  .layer{border-radius:6px;padding:8px 12px;font-size:14px;font-weight:600}
+  .layer span{font-weight:400;color:var(--muted)}
+  .layer.top{background:var(--accent-soft)}
+  .layer.base{background:var(--sunk)}
+  .between{text-align:center;font-size:12px;color:var(--muted);margin:4px 0}
+  .tile{border-radius:10px;padding:12px}
+  .tile.t1{background:var(--tint-good)} .tile.t2{background:var(--tint-warn)} .tile.t3{background:var(--accent-soft)}
+  .tile b{display:block;font-family:var(--font-display);font-weight:600}
+  .arrow{display:flex;justify-content:center;color:var(--accent)}
+  .arrow svg{width:30px;height:30px;transform:rotate(90deg)}
+  .arrow .line{stroke-dasharray:3 3}
+  @media (prefers-reduced-motion:no-preference){ .arrow .line{animation:dash 1.2s linear infinite} @keyframes dash{to{stroke-dashoffset:-12}} }
+  @media (min-width:1024px){
+    .diagram{grid-template-columns:minmax(0,1fr) 32px minmax(0,4.3fr)}
+    .boundary-grid{grid-template-columns:minmax(0,3.2fr) 28px minmax(0,1fr)}
+    .host-grid{grid-template-columns:minmax(0,1fr) 24px minmax(0,1.3fr) 24px minmax(0,1fr)}
+    .arrow svg{transform:none}
+  }
+
+  /* phases */
+  .phases{display:grid;gap:8px}
+  .phase{border-radius:10px;padding:16px;background:var(--card);border:1px solid var(--line)}
+  .phase b{display:block;font:600 18px/1.2 var(--font-display)}
+  .phase.now{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+  .phase.now b{color:var(--on-accent)}
+  @media (min-width:640px){ .phases{grid-template-columns:repeat(4,minmax(0,1fr))} }
+
+  /* scale bar */
+  .scroll-x{overflow-x:auto}
+  .scale{min-width:540px}
+  .markers{position:relative;height:72px}
+  .marker{position:absolute;bottom:0;transform:translateX(-50%);text-align:center;font-size:12px;white-space:nowrap}
+  .marker.end{transform:none;right:1%;text-align:right}
+  .marker i{display:block;width:2px;background:var(--ink);margin:4px auto 0}
+  .marker.end i{margin-left:auto;margin-right:0}
+  .bar{display:flex;height:56px;border-radius:10px;overflow:hidden;font-size:14px;font-weight:600}
+  .bar>div{display:flex;align-items:center;padding:0 16px}
+  .seg1{background:var(--sunk)} .seg2{background:var(--tint-warn);color:var(--warn)} .seg3{background:var(--tint-good);color:var(--good);justify-content:center;padding:0!important}
+  .ticks{position:relative;height:20px;margin-top:4px;font:12px var(--mono);color:var(--muted)}
+  .ticks span{position:absolute;transform:translateX(-50%)}
+  .ticks span:first-child{transform:none;left:0} .ticks span:last-child{transform:none;right:0}
+
+  /* options */
+  .options{display:grid;gap:12px}
+  .option{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+  .option.pick{border:2px solid var(--accent)}
+  .option b{display:block;font:600 18px/1.2 var(--font-display);margin:2px 0}
+  .option .label{color:var(--muted)} .option.pick .label{color:var(--accent)}
+  @media (min-width:640px){ .options{grid-template-columns:repeat(2,minmax(0,1fr))} }
+  @media (min-width:1024px){ .options{grid-template-columns:repeat(4,minmax(0,1fr))} }
+
+  /* questions and risks */
+  .qr{display:grid;gap:40px}
+  .key{background:var(--accent-soft);border-radius:10px;padding:10px 16px;font-weight:600;margin-bottom:8px}
+  @media (min-width:1024px){ .qr{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)} }
+
+  /* mind map: root node with branch cards, no library */
+  .mind{display:flex;flex-direction:column;align-items:center}
+  .root{background:var(--accent);color:var(--on-accent);font:700 18px var(--font-display);padding:12px 24px;border-radius:999px}
+  .stem{width:2px;height:20px;background:var(--line)}
+  .branches{display:grid;gap:12px;width:100%;border-top:2px solid var(--line);padding-top:20px}
+  .branch{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;position:relative}
+  .branch:before{content:"";position:absolute;top:-21px;left:50%;width:2px;height:20px;background:var(--line)}
+  .branch b{display:block;font-family:var(--font-display);font-weight:600;margin-bottom:6px;color:var(--accent)}
+  .branch li{font-size:14px;padding:2px 0}
+  @media (min-width:640px){ .branches{grid-template-columns:repeat(3,minmax(0,1fr))} }
+  @media (min-width:1024px){ .branches{grid-template-columns:repeat(5,minmax(0,1fr))} }
+
+  #theme{position:fixed;right:16px;bottom:16px;z-index:10;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 16px;font:600 14px var(--font);cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.12)}
+  #theme:hover{border-color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<button id="theme" type="button">☾ Dark mode</button>
+
+<main>
+
+  <!-- Header: name + the one question the meeting is about -->
+  <header>
+    <p class="label">Team · Date · Draft</p>
+    <h1 class="title">Proposal Name</h1>
+    <p class="question">The decision this meeting is about, as one question?</p>
+  </header>
+
+  <!-- System diagram: the centrepiece. Short labels, one detail line per box at most. -->
+  <section aria-label="Structure">
+    <div class="diagram">
+      <div class="col">
+        <p class="label">Inputs</p>
+        <div class="tile t1"><b>Input group one</b><span class="small">Example · Example · Example</span></div>
+        <div class="tile t2"><b>Input group two</b></div>
+        <div class="tile t3"><b>Input group three</b><span class="small">Example · Example</span></div>
+        <div class="dashed"><b class="muted">Later</b></div>
+      </div>
+
+      <div class="arrow" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.2"><path class="line" d="M2 14h20"/><path d="M17 8l6 6-6 6"/></svg></div>
+
+      <div class="boundary">
+        <p class="label" style="margin-bottom:12px">Boundary · e.g. company network</p>
+        <div class="boundary-grid">
+          <div class="host">
+            <p class="label" style="margin-bottom:12px">Host · e.g. server</p>
+            <div class="host-grid">
+              <div class="box">
+                <b>Process step</b>
+                <ol class="small" style="color:var(--ink);font-size:14px;margin-top:6px;display:flex;flex-direction:column;gap:4px">
+                  <li>1 · First action</li>
+                  <li>2 · Second action</li>
+                  <li>3 · Third action</li>
+                </ol>
+              </div>
+              <div class="arrow" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.2"><path class="line" d="M2 14h20"/><path d="M17 8l6 6-6 6"/></svg></div>
+              <div class="core">
+                <div class="core-head"><b>Core system</b><span class="badge">Tech</span></div>
+                <div class="layer top">Top layer <span>· what people see</span></div>
+                <div class="between" aria-hidden="true">▲ built from</div>
+                <div class="layer base">Base layer <span>· what it rests on</span></div>
+              </div>
+              <div class="arrow" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.2"><path class="line" d="M2 14h20"/><path d="M17 8l6 6-6 6"/></svg></div>
+              <div class="col">
+                <div class="box"><b>Way in one</b></div>
+                <div class="box"><b>Way in two</b></div>
+                <div class="box"><b>Way in three</b><span class="small">qualifier</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="arrow" aria-hidden="true"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.2"><path class="line" d="M2 14h20"/><path d="M17 8l6 6-6 6"/></svg></div>
+          <div class="col">
+            <p class="label">Users</p>
+            <div class="box"><b>User group one</b></div>
+            <div class="box"><b>User group two</b></div>
+            <div class="dashed"><b class="muted">Later group</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phases: the first (or current) one filled in -->
+  <section aria-labelledby="ph">
+    <h2 id="ph" class="h2">Phases</h2>
+    <ol class="phases">
+      <li class="phase now"><span class="label" style="color:inherit;opacity:.8">1</span><b>First phase</b></li>
+      <li class="phase"><span class="label">2</span><b>Second phase</b></li>
+      <li class="phase"><span class="label">3</span><b>Third phase</b></li>
+      <li class="phase"><span class="label">4</span><b>Fourth phase</b></li>
+    </ol>
+  </section>
+
+  <!-- Scale bar: thresholds, bands or a range, with optional example markers.
+       Markers whose labels would collide go on different rows: give the later one a taller <i>. -->
+  <section aria-labelledby="sc">
+    <h2 id="sc" class="h2">Scale name <span class="muted" style="font:400 16px var(--font)">· one-line explanation</span></h2>
+    <div class="scroll-x">
+      <div class="scale">
+        <div class="markers">
+          <div class="marker" style="left:10%">Example A <span class="muted">0.10</span><i style="height:12px"></i></div>
+          <div class="marker" style="left:80%">Example B <span class="muted">0.80</span><i style="height:12px"></i></div>
+          <div class="marker end">Example C <span class="muted">0.99</span><i style="height:36px"></i></div>
+        </div>
+        <div class="bar">
+          <div class="seg1" style="width:70%">Band one</div>
+          <div class="seg2" style="width:22%">Band two</div>
+          <div class="seg3" style="width:8%">Three</div>
+        </div>
+        <div class="ticks"><span>0</span><span style="left:70%">0.70</span><span style="left:92%">0.92</span><span>1</span></div>
+      </div>
+    </div>
+    <p class="small" style="margin-top:8px">One line on what the scale measures. Mark example numbers as examples.</p>
+  </section>
+
+  <!-- Options: 2-4 routes, one marked suggested, each a title and a few words -->
+  <section aria-labelledby="op">
+    <h2 id="op" class="h2">Options</h2>
+    <div class="options">
+      <div class="option pick"><span class="label">A · suggested</span><b>Option name</b><span class="small">Few words on it</span></div>
+      <div class="option"><span class="label">B</span><b>Option name</b><span class="small">Few words on it</span></div>
+      <div class="option"><span class="label">C</span><b>Option name</b><span class="small">Few words on it</span></div>
+      <div class="option"><span class="label">D</span><b>Option name</b><span class="small">Few words on it</span></div>
+    </div>
+  </section>
+
+  <!-- Questions (top three in full, the rest as chips) and risks (high ones tinted) -->
+  <section class="qr">
+    <div>
+      <h2 class="h2">Questions</h2>
+      <ul>
+        <li class="key">★ Most important question?</li>
+        <li class="key">★ Second question?</li>
+        <li class="key">★ Third question?</li>
+      </ul>
+      <ul class="chips" style="margin-top:12px">
+        <li class="chip">Short question?</li>
+        <li class="chip">Short question?</li>
+        <li class="chip">Short question?</li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="h2">Risks</h2>
+      <ul class="chips">
+        <li class="chip hot">High risk</li>
+        <li class="chip hot">High risk</li>
+        <li class="chip">Other risk</li>
+        <li class="chip">Other risk</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Mind map: about 20 leaves, branches of 2-5 words each -->
+  <section aria-labelledby="mm">
+    <h2 id="mm" class="h2">Mind map</h2>
+    <div class="mind">
+      <div class="root">Proposal name</div>
+      <div class="stem" aria-hidden="true"></div>
+      <div class="branches">
+        <div class="branch"><b>Branch one</b><ul><li>Leaf</li><li>Leaf</li><li>Leaf</li></ul></div>
+        <div class="branch"><b>Branch two</b><ul><li>Leaf</li><li>Leaf</li><li>Leaf</li></ul></div>
+        <div class="branch"><b>Branch three</b><ul><li>Leaf</li><li>Leaf</li></ul></div>
+        <div class="branch"><b>Branch four</b><ul><li>Leaf</li><li>Leaf</li><li>Leaf</li></ul></div>
+        <div class="branch"><b>Branch five</b><ul><li>Leaf</li><li>Leaf</li><li>Leaf</li><li>Leaf</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  (function () {
+    var root = document.documentElement, btn = document.getElementById('theme'), KEY = 'visual-aid-theme';
+    function render() { var d = root.getAttribute('data-theme') === 'dark'; btn.textContent = d ? '☀ Light mode' : '☾ Dark mode'; btn.setAttribute('aria-label', 'Switch to ' + (d ? 'light' : 'dark') + ' mode'); }
+    try { if (localStorage.getItem(KEY) === 'dark') root.setAttribute('data-theme', 'dark'); } catch (e) {}
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      if (dark) root.setAttribute('data-theme', 'dark'); else root.removeAttribute('data-theme');
+      try { localStorage.setItem(KEY, dark ? 'dark' : 'light'); } catch (e) {}
+      render();
+    });
+    render();
+  })();
+</script>
+</body>
+</html>
