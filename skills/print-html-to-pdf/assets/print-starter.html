@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Document title</title>
+<!--
+  Print starter for print-html-to-pdf. Copy this file, replace the content,
+  keep the PRINT BASE block. Tailwind works too: add
+  <script src="https://cdn.tailwindcss.com"></script> (needs network when
+  converting) or link a compiled stylesheet, and keep this block after it.
+-->
+<style>
+/* ---------- PRINT BASE: keep ---------- */
+@page {
+  size: A4;                 /* A4 landscape | Letter | 210mm 297mm */
+  margin: 18mm 16mm 20mm;
+  @bottom-right { content: counter(page) " / " counter(pages); font: 8pt var(--font); color: #777; }
+  @bottom-left  { content: "Document title"; font: 8pt var(--font); color: #777; }
+}
+@page :first { @bottom-left { content: none; } @bottom-right { content: none; } }
+
+:root {
+  --font: "Inter", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  --ink: #1a1a1a;
+  --muted: #5c5c5c;
+  --accent: #0b5cad;
+  --rule: #d9d9d9;
+  --tint: #f2f6fb;
+}
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; font: 10.5pt/1.5 var(--font); color: var(--ink); background: #fff; }
+
+h1, h2, h3 { break-after: avoid; line-height: 1.2; }
+figure, table, tr, img, svg, blockquote, .keep { break-inside: avoid; }
+p, li { orphans: 3; widows: 3; }
+.page-break { break-before: page; }
+thead { display: table-header-group; }   /* repeat table headers on each page */
+img, svg { max-width: 100%; height: auto; }
+a { color: var(--accent); text-decoration: none; }
+/* ---------- end PRINT BASE ---------- */
+
+/* Layout: mm and pt, no vh, no fixed/sticky, no animation needed */
+*, *::before, *::after { box-sizing: border-box; }
+/* A4 297mm minus 18mm + 20mm @page margins = 259mm usable height; stay under it */
+.cover { height: 250mm; break-inside: avoid; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 20mm; }
+.cover .eyebrow { color: var(--muted); font-size: 11pt; }
+.cover h1 { font-size: 34pt; margin: 4mm 0 6mm; }
+.cover p { color: var(--muted); font-size: 12pt; max-width: 130mm; }
+
+h2 { font-size: 16pt; margin: 0 0 4mm; color: var(--accent); }
+h3 { font-size: 11.5pt; margin: 6mm 0 2mm; }
+
+.finding { border-left: 1mm solid var(--accent); padding: 1mm 0 1mm 5mm; margin: 6mm 0; font-size: 13pt; max-width: 140mm; }
+
+table { width: 100%; border-collapse: collapse; margin: 4mm 0; font-size: 9.5pt; }
+th, td { text-align: left; padding: 2mm 3mm; border-bottom: .3mm solid var(--rule); }
+th { background: var(--tint); }
+</style>
+</head>
+<body>
+
+<!-- Placeholder layout: replace it with the design planned for this brief
+     (references/design.md). Only the PRINT BASE block is meant to be kept. -->
+<section class="cover">
+  <div class="eyebrow">Report</div>
+  <h1>Document title</h1>
+  <p>One-line summary of what this document is for and who it is for.</p>
+</section>
+
+<section class="page-break">
+  <h2>Section heading</h2>
+  <p>Body text. Keep real text in the HTML, never text baked into images, so it stays selectable and editable in the PDF.</p>
+
+  <p class="finding keep">A key finding, stated as a sentence the reader can act on.</p>
+
+  <figure>
+    <!-- Charts as inline SVG so they stay vector -->
+    <svg viewBox="0 0 400 120" role="img" aria-label="Example bar chart">
+      <g fill="#0b5cad">
+        <rect x="20" y="60" width="50" height="50" rx="3"/>
+        <rect x="110" y="35" width="50" height="75" rx="3"/>
+        <rect x="200" y="20" width="50" height="90" rx="3"/>
+        <rect x="290" y="45" width="50" height="65" rx="3"/>
+      </g>
+      <g font-size="10" fill="#5c5c5c" text-anchor="middle" font-family="sans-serif">
+        <text x="45" y="120">Q1</text><text x="135" y="120">Q2</text><text x="225" y="120">Q3</text><text x="315" y="120">Q4</text>
+      </g>
+    </svg>
+    <figcaption style="color:var(--muted);font-size:9pt">Figure caption.</figcaption>
+  </figure>
+
+  <h3>Table</h3>
+  <table>
+    <thead><tr><th>Item</th><th>Owner</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Example row</td><td>Name</td><td>Done</td></tr>
+      <tr><td>Example row</td><td>Name</td><td>In progress</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</body>
+</html>

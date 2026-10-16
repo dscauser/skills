@@ -1,0 +1,49 @@
+{
+  "skill_name": "print-html-to-pdf",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Make me a 4-page PDF report on our Q3 customer survey: 1,240 responses, NPS went from 31 to 38, top complaints were delivery times (34%), stock availability (22%) and website search (15%). It's going to the leadership team so it needs to look properly designed, and I want the text to be selectable in the PDF, not a picture.",
+      "expected_output": "Writes print-ready HTML from the starter (A4 @page with margins and page numbers, print-color-adjust, break rules), charts as inline SVG using only the given figures, converts with scripts/html_to_pdf.py, fixes any warnings, renders the pages to check layout, confirms the text extracts, and delivers the PDF and the HTML.",
+      "files": [],
+      "expectations": [
+        "Uses an @page rule with a paper size and margins rather than relying on defaults",
+        "Draws charts as inline SVG, not canvas",
+        "Uses no vh units, fixed or sticky elements, or scroll animations",
+        "Uses only the figures the user gave and invents none",
+        "Runs scripts/html_to_pdf.py and addresses any WARN lines it prints",
+        "Renders the PDF pages to images and checks them, and confirms the text is extractable",
+        "Delivers both the PDF and the HTML source",
+        "Avoids the generated-page defaults from references/design.md (all-caps eyebrow labels, rows of identical metric cards, a single accented word) unless the brief asks for them"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I exported this landing page to PDF with Chrome's print and half of it is blank, the header is on every page and the hero takes a whole page. Can you get me a decent PDF of it? It's landing.html in this folder, built with Tailwind.",
+      "expected_output": "Converts the page with the script, reads the warnings (opacity-0 reveal sections, sticky header, h-screen hero, maybe backdrop blur), adds a print stylesheet or Tailwind print: variants that make reveal content visible, makes the header static or hides it, and sizes the hero in mm, then converts again and checks every page. Mentions --single-page as an alternative if the design is meant as one long page.",
+      "files": [],
+      "expectations": [
+        "Runs scripts/html_to_pdf.py on the existing file before changing it",
+        "Explains the blank sections as scroll-reveal content left at opacity 0",
+        "Fixes the sticky or fixed header for print instead of leaving it to repeat",
+        "Replaces the h-screen or 100vh hero height for print",
+        "Keeps the screen design intact by adding print rules rather than rewriting the page",
+        "Converts again after the fixes and checks the rendered pages"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Design an A5 landscape event flyer for a charity bake sale, Saturday 14 June, 10am-2pm, at the village hall, all proceeds to the local food bank. I want to be able to open the PDF in Acrobat and tweak the wording later.",
+      "expected_output": "Builds a single-page A5 landscape design with @page size: A5 landscape, all text as real text, decorative shapes in CSS or SVG with no blur or blend effects, fonts with TrueType outlines, keeps everything within one page, converts and confirms one page with extractable text.",
+      "files": [],
+      "expectations": [
+        "Sets @page size to A5 landscape",
+        "Keeps every piece of wording as real HTML text, none in images",
+        "Avoids filter, backdrop-filter and blend modes so nothing is rasterised",
+        "Chooses fonts with TrueType outlines or a system font, or explains the Type 3 limitation of .otf fonts",
+        "Produces exactly one page and checks it visually",
+        "Avoids the generated-page defaults from references/design.md (all-caps eyebrow labels, rows of identical metric cards, a single accented word) unless the brief asks for them"
+      ]
+    }
+  ]
+}
