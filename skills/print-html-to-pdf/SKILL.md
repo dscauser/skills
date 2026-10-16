@@ -13,20 +13,39 @@ canvas charts), not the conversion. Design for paper from the start.
 
 ## Workflow
 
-1. **Settle the page.** Paper size and orientation (A4 unless the user is in
+1. **Load the context.** Look for `pdf-context.md` in the workspace, then
+   `context.md` next to this SKILL.md; the first one found wins. If found,
+   read it and follow it: its colours, fonts, logo (paths are relative to
+   the file), page defaults and voice override the design defaults, and
+   its "never" list overrides everything except the user's brief. If it
+   only says not to ask, carry on without one.
+
+   If neither exists and this is a new designed document, ask once, in the
+   same message as any other questions, whether to set one up: (a) answer
+   a few questions now, (b) point to a source (brand guidelines PDF,
+   website, an existing document or deck) to extract colours, fonts and
+   rules from, (c) skip for now, or (d) never ask again. For (a) or (b),
+   build `context.md` from [context.example.md](context.example.md),
+   keeping only fields with real answers; never guess hex values or font
+   names. Show it to the user before saving. For (d), save a `context.md`
+   containing only `No brand context. Do not ask.` Logo and font files go
+   in `brand/` next to it. Both stay out of git in the skills repo.
+
+2. **Settle the page.** Paper size and orientation (A4 unless the user is in
    the US or says otherwise), paginated document or a single tall page
    (`--single-page`, for posters and one-pagers shown on screen), and
    whether anyone will print it on paper. Ask only if it is unclear and
    changes the build.
 
-2. **Plan the design** (new documents). Read
+3. **Plan the design** (new documents). Read
    [references/design.md](references/design.md). Name the genre, the reader
-   and how they read it. Write a short plan: 4 to 6 colours, one or two
-   typefaces with a `pt` scale, a grid in `mm`, and the one memorable
-   element. Check the plan against the list of generated-page defaults
+   and how they read it. Take colours, type and rules from the context file
+   where it sets them, and plan only the rest. Write a short plan: 4 to 6
+   colours, one or two typefaces with a `pt` scale, a grid in `mm`, and the
+   one memorable element. Check the plan against the list of generated-page defaults
    there and change anything you would have produced for any brief.
 
-3. **Write the HTML for print.** For a new document, copy
+4. **Write the HTML for print.** For a new document, copy
    [assets/print-starter.html](assets/print-starter.html) and keep its PRINT
    BASE block: `@page` size, margins and page numbers, colour-exact
    printing, break rules. Follow
@@ -43,10 +62,10 @@ canvas charts), not the conversion. Design for paper from the start.
    - Real text everywhere, never text inside images.
 
    For an existing HTML page the user wants as a PDF, convert it first
-   (step 4), then fix what the warnings and the check (step 5) show. Add a
+   (step 5), then fix what the warnings and the check (step 6) show. Add a
    `@media print { ... }` block rather than rewriting the screen design.
 
-4. **Convert.** Needs `pip install playwright`. It uses Playwright's
+5. **Convert.** Needs `pip install playwright`. It uses Playwright's
    Chromium if installed, otherwise Edge or Chrome, so
    `python -m playwright install chromium` is only needed when neither
    browser exists.
@@ -64,7 +83,7 @@ canvas charts), not the conversion. Design for paper from the start.
    to trigger lazy images and scroll reveals, waits for fonts and images,
    then prints with backgrounds, CSS page size, tags and heading bookmarks.
 
-5. **Read the warnings and check the pages.** Each `WARN` line names the
+6. **Read the warnings and check the pages.** Each `WARN` line names the
    elements to fix (canvas, blur, sticky, still-invisible text, `vh`,
    missing `@page`, broken images or fonts, closed `<details>`, content
    wider than the page). Fix the HTML and convert again. Then:
@@ -79,7 +98,7 @@ canvas charts), not the conversion. Design for paper from the start.
    - If the PDF will be edited, list the fonts (`pdffonts out.pdf`, or each
      page's `/Resources /Font` in pypdf). `Type 3` means awkward to edit.
 
-6. **Deliver** the PDF path and page count, plus the HTML source so the user
+7. **Deliver** the PDF path and page count, plus the HTML source so the user
    can edit and convert again. Say what was not checked.
 
 ## Gotchas
@@ -91,7 +110,7 @@ canvas charts), not the conversion. Design for paper from the start.
 - Some fonts are embedded as Type 3: selectable but awkward to edit in a PDF
   editor. This covers fonts with CFF outlines (most `.otf`) and some web
   fonts (Inter from Google Fonts, for example; Lato and Roboto embed fine).
-  When the user wants to edit the PDF, check the font types (step 5) and
+  When the user wants to edit the PDF, check the font types (step 6) and
   swap any Type 3 font for a TrueType one.
 - The Tailwind Play CDN and web fonts need network access during
   conversion. Offline, use a compiled stylesheet and local font files.
