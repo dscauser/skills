@@ -1,14 +1,21 @@
 # Deliverables
 
-Produce the brief every time. Produce the extras only if the user picks them.
-Save everything to `ideas/<short-slug>/` in the user's workspace and give the
-path. With no file system, put the brief inline and each HTML file in an
-artifact.
+Produce only what the user picks from the wrap-up menu. The summary in the
+chat comes first every time; it is not a file. Save the files to
+`ideas/<short-slug>/` in the user's workspace and give the path. With no file
+system, put the brief inline and each HTML file in an artifact.
 
-All extras show the trimmed idea, not the whole conversation. Pull the content
-from the brief so everything agrees.
+All extras show the trimmed idea, not the whole conversation.
 
-## 1. Brief (`brief.md`, always)
+**What needs the brief:**
+
+| Picked | Write `brief.md` first? |
+|---|---|
+| Visual, animation or PDF | Yes. Build them from the brief so everything agrees, and tell the user in one line that the brief was saved too. |
+| Mind map only | No. Build it from the conversation. (With a brief, build it from the brief.) |
+| Nothing | No files at all. |
+
+## 1. Brief (`brief.md`, optional)
 
 One page. Leave out any line that adds nothing. Add the branch's "Brief extras"
 under "Branch notes".
@@ -32,6 +39,11 @@ under "Branch notes".
 ## What we explored
 - <Angle>: <one line, kept or dropped and why>
 - ...
+
+## What we looked at
+<Only if a quick or deep explore ran. Leave the section out otherwise.>
+- **<What others have done / source title>:** <one line on what it showed> (<link>)
+- **Dropped:** <angle>: <why, one line>
 
 ## The shape we landed on
 <The trimmed version in two or three sentences.>
@@ -58,7 +70,7 @@ under "Branch notes".
 Not checked: <...>. Biggest risk: <...>.
 ```
 
-## 2. Mind map (`mindmap.md`, optional)
+## 2. Mind map (`mindmap.md`, optional, no brief needed)
 
 A Mermaid `mindmap` in a fenced `mermaid` block. It renders on GitHub, in the
 VS Code Markdown preview, in Obsidian and in most chat apps.
@@ -152,7 +164,8 @@ US).
 installed, follow it: it plans the design, writes print-ready HTML
 (`brief-print.html`), converts it with its script and checks the pages. It
 reads its own brand context file; if it has none and this skill's context
-file gives brand colours or fonts, pass those on. If it is not installed,
+file gives brand colours or fonts, pass those on. If it is not installed, or
+its script cannot run (for example Playwright is missing),
 write `brief-print.html` with an `@page` rule (size and margins) and
 `print-color-adjust: exact`, tell the user to save it as PDF from the
 browser's print dialog with background graphics on, and mention once that
@@ -161,5 +174,5 @@ before installing anything.
 
 ## After delivering
 
-List the files with their paths in one short block, then the closing line:
-what you did not check, and the biggest risk.
+List the files with their paths in one short block (or say that none were
+written), then the closing line: what you did not check, and the biggest risk.

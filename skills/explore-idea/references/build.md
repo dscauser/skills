@@ -38,6 +38,18 @@ Use two or three that fit, not all of them.
 - **Flip who does the work.** Could AI, the customer or a supplier do the step
   instead?
 
+## Explore further (opt-in)
+
+- **Existing tools.** Search for products, open-source projects, browser
+  extensions and built-in features of tools the user already has that do this.
+  Note price, last update and what they miss.
+- **How others built it.** Write-ups, templates, no-code recipes or repos for
+  the same job. What did they learn the hard way?
+- **Complaints.** Reviews, forums and issue trackers for the nearest
+  alternatives: what users wish they did is where a gap is.
+- **Deep only:** the same job in another domain (how warehouses, hospitals or
+  games solve it), and the version with no software at all.
+
 ## Pressure test
 
 - Does a real alternative already exist? If so, why would anyone switch?

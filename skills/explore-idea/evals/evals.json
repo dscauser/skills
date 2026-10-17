@@ -4,25 +4,26 @@
     {
       "id": 1,
       "prompt": "I've got an idea - what if we did a 'buddy' scheme where every new starter gets paired with someone from a different department for their first month? Want to think it through before I take it to my HR director.",
-      "expected_output": "Picks the people branch, restates the idea, asks numbered questions with its read on each, plays back the idea and key terms before widening, then over the conversation offers alternative angles (smaller pilot, opt-in, manager-led), pushes back on workload, fairness and adoption, trims to a pilot, and ends with a one-page brief plus a menu of optional extras.",
+      "expected_output": "Picks the people branch, restates the idea, asks numbered questions with its read on each, plays back the idea and key terms before widening, then over the conversation offers alternative angles (smaller pilot, opt-in, manager-led), pushes back on workload, fairness and adoption, trims to a pilot, and ends with a short summary in the chat plus a numbered menu of opt-in deliverables with a recommendation.",
       "files": [],
       "expectations": [
         "Reads references/people.md and works from the people branch",
-        "First reply restates the idea in one sentence and asks no more than five questions, without producing the brief yet",
+        "First reply restates the idea in one sentence and asks about three to five questions (more only with a stated reason), without producing the brief yet",
         "Sharpen questions use the numbered ❓ format with a '➡️ My read:' line worded so 'yes' accepts it",
         "Before Widen, plays back the idea with at least one 'when you say X, I take it you mean Y' line (e.g. what 'buddy' or 'first month' involves) and waits for confirmation",
         "Before writing the brief, plays back the trimmed shape and first step and waits for a yes",
-        "The brief includes a 'What we mean by' section with the terms agreed",
         "Offers at least three genuinely different angles, including a smaller or pilot version",
         "Raises at least one concern about buddy workload, fairness or adoption",
         "Does not give legal advice; flags HR or policy review if relevant",
-        "Wrap-up produces a brief that follows the template and offers mind map, visual and animation as optional extras"
+        "Ends Widen with a numbered choice (narrow down now, quick explore, deep explore) and a recommendation with a reason, and does no web research before the user picks an explore option",
+        "After Push back, asks whether to trim and write it up or keep exploring, with a recommendation",
+        "Wrap-up gives a five-to-eight line summary in the chat and a numbered menu (brief, mind map, visual, animation, PDF) with one recommendation, and writes no files until the user picks"
       ]
     },
     {
       "id": 2,
       "prompt": "Quick one: should our site show 'frequently bought together' bundles on product pages with a small discount? Just tell me what you think.",
-      "expected_output": "Picks the business branch with the customer lens (or commercial if the margin question dominates), compresses into one reply because the user said quick: verdict, the trimmed test (A/B on one category), the margin risk labelled as estimate, the first step, and the closing not-checked line.",
+      "expected_output": "Picks the business branch with the customer lens (or commercial if the margin question dominates), compresses into one reply because the user said quick: verdict, the trimmed test (A/B on one category), the margin risk labelled as estimate, the first step, and the closing not-checked line. No choice points or deliverables menu; ends with a one-line offer to explore further or write it up.",
       "files": [],
       "expectations": [
         "Uses the business branch and names the lens it chose",
@@ -30,21 +31,51 @@
         "Gives a one-line non-blocking reading of the idea instead of waiting for confirmation",
         "Suggests a small trial such as an A/B test on one category or segment",
         "Mentions the margin or cannibalisation risk without inventing unlabelled figures",
+        "Shows no Widen choice, no Push back check and no deliverables menu, and writes no files",
+        "Offers in one line to explore further or write anything up",
         "Ends with a line naming what was not checked and the biggest risk"
       ]
     },
     {
       "id": 3,
       "prompt": "I keep thinking about building an app that tracks what's in my freezer so I stop wasting food. Explore this with me, and at the end I'd like the mind map and a little animation.",
-      "expected_output": "Picks build (or personal, noting the overlap), widens with no-code options like a shared list or whiteboard, pushes back on whether an app is needed at all, trims to the smallest version, then writes ideas/<slug>/brief.md, mindmap.md with a valid Mermaid mindmap, and a self-contained animation.html with a replay button and reduced-motion fallback.",
+      "expected_output": "Picks build (or personal, noting the overlap), widens with no-code options like a shared list or whiteboard, pushes back on whether an app is needed at all, trims to the smallest version, then, because the animation is built from the brief, writes ideas/<slug>/brief.md first (saying so in one line), plus mindmap.md with a valid Mermaid mindmap, and a self-contained animation.html with a replay button and reduced-motion fallback.",
       "files": [],
       "expectations": [
         "Offers at least one no-code or do-nothing alternative to building an app",
         "Pushes back honestly on whether the user will keep the tracker up to date",
         "Writes the files under an ideas/<slug>/ folder and tells the user the path",
+        "Writes brief.md before animation.html and tells the user in one line that the brief was saved too, even though only the mind map and animation were asked for",
         "mindmap.md contains a fenced mermaid block starting with 'mindmap' that parses",
         "animation.html has no external script, font or image requests, includes a replay control and handles prefers-reduced-motion",
         "Mentions HyperFrames for MP4 only as an option and does not install anything without asking"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Explore this idea with me: I want to start a monthly repair café in my village hall where people bring broken things and volunteers fix them. I'm not sure if it's worth the effort. (When you play the idea back, I'll say yes. When you offer to narrow down or explore, I'll pick quick explore.)",
+      "expected_output": "Picks the open or personal branch (noting the overlap), sharpens and widens with 3-5 angles, then offers narrow / quick explore / deep explore with a recommendation (explore, since it is a first thought). When the user picks quick explore, runs a few web searches on existing repair cafés and similar schemes, reports 2-3 angles with links, and offers once to go deeper or narrow down.",
+      "files": [],
+      "expectations": [
+        "Offers 3-5 angles including a smallest version and a do-nothing or fix-the-cause option before any research",
+        "Ends Widen with a numbered narrow / quick explore / deep explore choice and recommends exploring with a reason",
+        "Does not search the web until the user picks an explore option",
+        "Quick explore reports what existing repair cafés or similar schemes have done, each with a link",
+        "After the quick explore, offers once to go deeper or narrow down, with a recommendation",
+        "If the brief is later written, it includes a 'What we looked at' section with the sources"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Context: we've been exploring an idea to run a four-week trial of a shared team inbox instead of individual support emails. We've sharpened it, widened it, you pushed back (verdict: go, as a trial with one team) and I confirmed your trimmed playback. Let's wrap this up. Just the PDF please, nothing else - I need to send it to my manager.",
+      "expected_output": "At an explore-idea wrap-up where the user picks only the PDF: writes brief.md first, says in one line that the brief was saved too, then builds brief.pdf from it (via print-html-to-pdf if installed), and lists the file paths with the closing not-checked line.",
+      "files": [],
+      "expectations": [
+        "Writes ideas/<slug>/brief.md before building the PDF",
+        "Tells the user in one line that the brief was saved too",
+        "Builds the PDF from the brief's content, leading with the verdict and the shape landed on",
+        "Does not produce a mind map, visual or animation",
+        "Lists the written files with their paths and ends with what was not checked and the biggest risk"
       ]
     }
   ]

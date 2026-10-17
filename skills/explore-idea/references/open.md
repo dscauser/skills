@@ -36,6 +36,15 @@ Use two or three that fit.
 - **Who else.** Who is already working on this, and could the user join them
   instead of starting from scratch?
 
+## Explore further (opt-in)
+
+- **Who else.** People, groups or projects already working on this, and what
+  they have found.
+- **What is known.** Articles, research or prior attempts that answer the
+  biggest unknown.
+- **Deep only:** run the remaining thinking moves in turn (analogy, opposite,
+  constraint flip, different scales) and report what each turns up.
+
 ## Pressure test
 
 - Is there a clear enough goal to judge it against? If not, agree one before

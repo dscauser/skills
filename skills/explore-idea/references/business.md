@@ -62,6 +62,17 @@ Use two or three that fit.
 - **Second-order effects.** If it works, what breaks? Stock, service load,
   cannibalising another line, staff workload.
 
+## Explore further (opt-in)
+
+- **Competitors and peers.** Who already does this, how they price and present
+  it, and what customers say about it in reviews.
+- **Other industries and countries.** The same move in a different sector or
+  market, and how it went.
+- **Evidence.** Published case studies, benchmarks or research on the effect.
+  Keep reported figures with their source; anything else stays `[estimate]`.
+- **Deep only:** the reverse move, the customer's alternatives (including doing
+  nothing), and second-order effects others ran into.
+
 ## Pressure test
 
 Both lenses:

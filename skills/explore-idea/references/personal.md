@@ -38,6 +38,15 @@ Use two or three that fit.
   person say?
 - **Combine.** Could it fold into something they already do?
 
+## Explore further (opt-in)
+
+- **People who did it.** Experiences, reviews and forum threads from people who
+  tried the same thing: what surprised them, what they would do differently.
+- **Real costs.** Current prices, running costs and cheaper ways to try it
+  first, with sources. Stay general on money; no financial advice.
+- **Deep only:** other ways to meet the same underlying want, and the version
+  that costs nothing.
+
 ## Pressure test
 
 - What is the most likely way this fizzles out, and what would prevent it?
