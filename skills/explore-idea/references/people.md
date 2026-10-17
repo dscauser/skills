@@ -39,6 +39,17 @@ Use two or three that fit.
 - **Seen from the edges.** How does it look to part-time, remote, shift,
   new or long-serving staff, or someone with a disability?
 
+## Explore further (opt-in)
+
+- **Other organisations.** How similar teams or companies have done this:
+  published policies, write-ups, talks.
+- **Evidence.** Research or survey findings on whether it works, and for whom.
+- **Rules.** The guidance or law that might apply, from official sources, to
+  flag for review. Do not give legal advice.
+- **Deep only:** what the people affected say about schemes like this in
+  forums and reviews, and approaches from outside the workplace (schools,
+  sports clubs, volunteer groups).
+
 ## Pressure test
 
 - Fairness: does it treat any group differently, intended or not?
